@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import * as SliderPrimitive from "@radix-ui/react-slider"
-import { Bell, ChevronDown, Circle, Heart, LayoutGrid, Search, ShoppingBag, Smartphone, Star, Zap } from "lucide-react";
+import { Bell, ChevronDown, Circle, Crown, Facebook, Heart, Instagram, LayoutGrid, Search, ShoppingBag, Smartphone, Star, Twitter, Youtube, Zap } from "lucide-react";
 import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -134,7 +134,7 @@ const SALE_ITEMS = [
 const DIFFERENT_SHOP = [
   {
     "mark": "Nike Sae Mall",
-    "slogan": "Just do it bro!",
+    "slogan": `"Just do it bro!"`,
     "img1": "https://picsum.photos/seed/bag/400/400",
     "price1": 650000,
     "img2": "https://picsum.photos/seed/heels/400/400",
@@ -144,7 +144,7 @@ const DIFFERENT_SHOP = [
   },
   {
     "mark": "Barudak Disaster Mall",
-    "slogan": "Unleash Your Fashion",
+    "slogan": `"Unleash Your Fashion"`,
     "img1": "https://picsum.photos/seed/coat/400/400",
     "price1": 324000,
     "img2": "https://picsum.photos/seed/sneakers/400/400",
@@ -154,7 +154,7 @@ const DIFFERENT_SHOP = [
   },
   {
     "mark": "Galaxy Galleria Mall",
-    "slogan": "Be Extraordinary",
+    "slogan": `"Be Extraordinary"`,
     "img1": "https://picsum.photos/seed/shirts/400/400",
     "price1": 179000,
     "img2": "https://picsum.photos/seed/runningshoes/400/400",
@@ -162,8 +162,17 @@ const DIFFERENT_SHOP = [
     "img3": "https://picsum.photos/seed/pants/400/400",
     "price3": 253000
   },
+  {
+    "mark": "Aurora Well Mall",
+    "slogan": `"Chic, Bold, Confident"`,
+    "img1": "https://picsum.photos/seed/bag2/400/400",
+    "price1": 250000,
+    "img2": "https://picsum.photos/seed/shorts/400/400",
+    "price2": 162000,
+    "img3": "https://picsum.photos/seed/jacket/400/400",
+    "price3": 255000
+  }
 ]
-
 
 const CATEGORIES = [
   "T-Shirt", "Jacket", "Shirt", "Jeans", "Bag", "Shoes", "Watches", "Cap"
@@ -421,31 +430,109 @@ function BestSell() {
       <div className="flex justify-center">
         <p className="font-bold text-xl text-black">Best Selling Store</p>
       </div>
-      <Card className="bg-[#CCCED4] flex flex-col items-center w-60 overflow-hidden border border-[#CCCED4]">
-        <div className="h-3/5">
-          <img src="https://picsum.photos/seed/clothing1/400/400" alt="clothingimage" />
+      <div className="grid grid-cols-3 grid-rows-2">
+        <Card className="bg-[#CCCED4] flex flex-col items-center justify-center w-60 h-96 overflow-hidden border border-[#CCCED4] row-span-2">
+          <div className="h-3/4">
+            <img src="https://picsum.photos/seed/clothing1/400/400" alt="clothingimage" />
+          </div>
+          <div className="text-[#595F68] flex flex-col items-center">
+            <p className="font-bold text-2xl pt-4">BeliBeli Mall</p>
+            <p className="pt-2">Shop, Explore, Delight and Experience Mall Magic!</p>
+          </div>
+        </Card>
+        {
+          DIFFERENT_SHOP.map(({ mark, slogan, img1, price1, img2, price2, img3, price3 }) => (
+            <Card className="border border-zinc-400 rounded-lg bg-white w-60 h-44 flex">
+              <div>
+                <div className="flex">
+                  <img
+                    src="https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png"
+                    alt="logo"
+                    className="w-10 h-10 cursor-pointer md:h-14 md:w-14"
+                  />
+                  <div className="bg-[#3488D6] w-5 h-5 rounded-full p-1">
+                    <Crown className="w-3 h-3" />
+                  </div>
+                  <div>
+                    <p className="text-black text-sm">{mark}</p>
+                    <p className="text-gray-500 text-xs">{slogan}</p>
+                  </div>
+                </div>
+                <div className="text-black flex text-xs">
+                  <div className="flex flex-col items-center p-1">
+                    <img src={img1} alt="" className="w-20 rounded-lg" />
+                    <p>{price1}</p>
+                  </div>
+                  <div className="flex flex-col items-center p-1">
+                    <img src={img2} alt="" className="w-20 rounded-lg" />
+                    <p>{price2}</p>
+                  </div>
+                  <div className="flex flex-col items-center p-1">
+                    <img src={img3} alt="" className="w-20 rounded-lg" />
+                    <p>{price3}</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ))
+        }
+      </div>
+    </div>
+  )
+}
+
+function Contacts() {
+  return (
+    <div className="bg-[#1C242D]">
+      <div className="relative flex justify-center ">
+        <img src="https://picsum.photos/800/600" alt="" className="brightness-50 w-full h-64" />
+        <p className="text-white absolute top-24 text-6xl">"Let's Shop Beyond Boundaries"</p>
+      </div>
+      <div>
+        <div className="flex items-center text-white">
+          <img
+            src="https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png"
+            alt="logo"
+            className="w-6 h-6 cursor-pointer md:h-14 md:w-14"
+          />
+          <p className="font-bold text-xl">BeliBeli.com</p>
         </div>
-        <div className="text-[#595F68] flex flex-col items-center">
-          <p className="font-bold text-2xl pt-4">BeliBeli Mall</p>
-          <p className="pt-2">Shop, Explore, Delight and Experience Mall Magic!</p>
+        <p className="text-sm">"Let's Shop Beyond Boundaries"</p>
+        <div className="flex text-[#777C80]">
+          <Facebook />
+          <Twitter />
+          <Youtube />
+          <Instagram />
         </div>
-      </Card>
-      {
-        DIFFERENT_SHOP.map(({ mark, slogan, img1, price1, img2, price2, img3, price3 }) => (
-          <Card className="border border-zinc-400 rounded-lg">
-            <div>
-              <p className="text-black">{mark}</p>
-              <p>{slogan}</p>
-              <img src={img1} alt="" />
-              <p>{price1}</p>
-              <img src={img2} alt="" />
-              <p>{price2}</p>
-              <img src={img3} alt="" />
-              <p>{price3}</p>
-            </div>
-          </Card>
-        ))
-      }
+      </div>
+      <div className="flex text-sm">
+        <div className="flex flex-col">
+          <p className="text-[#777C80]">BeliBeli</p>
+          <a href="#">About BeliBeli</a>
+          <a href="#">Career</a>
+          <a href="#">Mitra Blog</a>
+          <a href="#">B2B Digital</a>
+        </div>
+        <div className="flex flex-col">
+          <p className="text-[#777C80]">Buy</p>
+          <a href="#">Bill & Top Up</a>
+          <a href="#">CarBeliBeli CODeer</a>
+          <a href="#">Mitra Blog</a>
+          <a href="#">Promo</a>
+        </div>
+        <div className="flex flex-col">
+          <p className="text-[#777C80]">Sell</p>
+          <a href="#">Seller Education Center</a>
+          <a href="#">Brand Index</a>
+          <a href="#">Register Official Store</a>
+        </div>
+        <div className="flex flex-col">
+          <p className="text-[#777C80]">Guide and Help</p>
+          <a href="#">BeliBeli Care</a>
+          <a href="#">Term and Confition</a>
+          <a href="#">Privacy Mitra</a>
+        </div>
+      </div>
     </div>
   )
 }
@@ -459,6 +546,7 @@ export default function App() {
       <FlashSale />
       <ForYou />
       <BestSell />
+      <Contacts />
     </div>
   )
 }
