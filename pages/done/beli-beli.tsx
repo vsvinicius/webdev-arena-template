@@ -2,13 +2,17 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem, } from "@/components/ui/carousel";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Toaster } from "@/components/ui/sonner";
 import * as SliderPrimitive from "@radix-ui/react-slider"
-import { Bell, ChevronDown, Circle, Copyright, Crown, Heart, LayoutGrid, Menu, Search, ShoppingBag, Smartphone, Star, Zap } from "lucide-react";
+import { Bell, ChevronDown, Circle, ClipboardSignature, Copyright, Crown, Heart, LayoutGrid, Menu, Search, ShoppingBag, Smartphone, Star, Zap } from "lucide-react";
 import { Inter } from "next/font/google";
 import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 const inter = Inter({
@@ -243,7 +247,7 @@ const SPECIAL_CATEGORIES = [
   'Coveted Product',
 ]
 
-function Header({ search, onChangeSearch, category, onChangeCategory }: { search: string; onChangeSearch: React.Dispatch<React.SetStateAction<string>>; category: string; onChangeCategory: React.Dispatch<React.SetStateAction<string>>; }) {
+function Header({ search, onChangeSearch, category, onChangeCategory, likeCarShop }: { search: string; onChangeSearch: React.Dispatch<React.SetStateAction<string>>; category: string; onChangeCategory: React.Dispatch<React.SetStateAction<string>>; likeCarShop: Vesture[] }) {
   return (
     <header className="w-full bg-white text-sm font-medium">
       <div className="text-gray-500 flex border-b border-gray-300 w-full px-2 md:px-16 py-2 justify-between items-center">
@@ -312,11 +316,44 @@ function Header({ search, onChangeSearch, category, onChangeCategory }: { search
           />
         </div>
         <div className="flex gap-6 row-start-1 md:col-start-6 col-start-2 justify-self-end">
-          <ShoppingBag className="cursor-pointer" />
-          <Bell className="cursor-pointer" />
+          <Sheet>
+            <SheetTrigger>
+              <ShoppingBag className="cursor-pointer" />
+            </SheetTrigger>
+            <SheetContent className="bg-gray-700 opacity-95">
+              <SheetHeader>
+                <SheetTitle className="mt-4 ml-28">Your Cart</SheetTitle>
+                <SheetDescription>
+                </SheetDescription>
+              </SheetHeader>
+              <div className="flex flex-col justify-between h-[90%]">
+                <div>
+                  {likeCarShop.map(({ imageSrc, name, price }) =>
+                    <article key={name} className="flex gap-2 items-center w-full mt-2 bg-white py-4 px-2 rounded-md border border-gray-200">
+                      <div className={`flex items-center justify-center h-10 shadow-none rounded-lg overflow-hidden`}>
+                        <img src={imageSrc} alt="Vesture items" className="h-full w-full" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-black">{name}</p>
+                        <p className="text-sm text-black">{price}</p>
+                      </div>
+                    </article>
+                  )}
+                </div>
+                <div className="bg-[#F87171] rounded-lg w-20 flex justify-center font-semibold ml-28">
+                  <button className="text-lg">Buy</button>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+          <Bell className="cursor-pointer"
+            onClick={() =>
+              toast.info("This feature is under development.")
+            }
+          />
         </div>
-      </div>
-    </header>
+      </div >
+    </header >
   );
 }
 
@@ -391,12 +428,17 @@ function Category() {
   )
 }
 
-function ItemCard({ name, price, salePrice, totalItems, remainingItems, imageSrc, stars, className, hideSlider, addStar }: Vesture & { className?: string; hideSlider?: boolean; addStar?: boolean }) {
+function ItemCard({ className, hideSlider, addStar, onApply, ...props }: Vesture & { className?: string; hideSlider?: boolean; addStar?: boolean; onApply?: (likedItem: Vesture) => void }) {
+  const { name, price, salePrice, totalItems, remainingItems, imageSrc, stars } = props;
   const [liked, setLiked] = useState(false);
+  function handleLike() {
+    setLiked(prevState => !prevState)
+    onApply?.(props)
+  }
   return (
     <Card className={twMerge("relative overflow-hidden bg-white w-full h-96 border-none", className)}>
-      <div className="absolute right-5 top-4 bg-white rounded-full p-1 flex items-center justify-center" onClick={() => setLiked(prevState => !prevState)}>
-        <Heart className={twMerge("fill-gray-300 w-6 h-6 transition-all duration-200 text-gray-300", liked && 'fill-red-500 text-red-500')} />
+      <div className="absolute right-5 top-4 p-1 flex items-center justify-center" onClick={() => handleLike()}>
+        <Heart className={twMerge("text-white fill-white w-6 h-6 transition-all duration-200", liked && 'fill-red-500 text-red-500')} />
       </div>
       <div className="text-black h-full">
         <img src={imageSrc} alt="Vesture items" className="h-3/5 w-full" />
@@ -439,7 +481,7 @@ function ItemCard({ name, price, salePrice, totalItems, remainingItems, imageSrc
 
 const FUTURE_DATE = new Date('2026-10-10');
 
-function FlashSale() {
+function FlashSale({ onApply }: { onApply: (likedItem: Vesture) => void }) {
   const [date, setDate] = useState<Date>();
   const distance = date ? FUTURE_DATE.getTime() - date.getTime() : 0;
 
@@ -475,7 +517,7 @@ function FlashSale() {
         <CarouselContent>
           {SALE_ITEMS.map((vesture: Vesture) => (
             <CarouselItem key={vesture.name} className="md:basis-1/5 ml-2">
-              <ItemCard {...vesture} />
+              <ItemCard {...vesture} onApply={onApply} />
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -484,7 +526,7 @@ function FlashSale() {
   )
 }
 
-function ForYou({ selectedCategories, onSelect }: { selectedCategories: string[]; onSelect: React.Dispatch<React.SetStateAction<string[]>> }) {
+function ForYou({ selectedCategories, onSelect, onApply }: { selectedCategories: string[]; onSelect: React.Dispatch<React.SetStateAction<string[]>>, onApply: (likedItem: Vesture) => void }) {
   function handleClickCategory(category: string) {
     onSelect((prevState) => {
       if (prevState.includes(category)) return prevState.filter((item) => item !== category);
@@ -515,13 +557,13 @@ function ForYou({ selectedCategories, onSelect }: { selectedCategories: string[]
         <CarouselContent>
           {filteredData.map((vesture: Vesture) => (
             <CarouselItem key={vesture.name} className="ml-2 mb-10">
-              <ItemCard {...vesture} hideSlider addStar />
+              <ItemCard {...vesture} hideSlider addStar onApply={onApply} />
             </CarouselItem>
           ))}
         </CarouselContent>
       </Carousel>
       <div className="flex-wrap gap-5 justify-evenly hidden md:flex">
-        {filteredData.map((item) => <ItemCard {...item} key={item.name} className="w-1/5 cursor-pointer" hideSlider addStar />)}
+        {filteredData.map((item) => <ItemCard {...item} key={item.name} className="w-1/5 cursor-pointer" hideSlider addStar onApply={onApply} />)}
       </div>
     </div>
   )
@@ -663,9 +705,14 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All Category');
   const [specialCategories, setSpecialCategories] = useState<string[]>([]);
+  const [likeCarShop, setLikeCarShop] = useState<Vesture[]>([]);
+  function handleLikeCard(likedItem: Vesture) {
+    setLikeCarShop((prevState) => [...prevState, likedItem])
+  }
   return (
     <div className={`${inter.className} bg-[#F4F4F5] w-screen h-screen overflow-auto`}>
-      <Header onChangeSearch={setSearch} search={search} category={category} onChangeCategory={setCategory} />
+      <Toaster richColors />
+      <Header onChangeSearch={setSearch} search={search} category={category} onChangeCategory={setCategory} likeCarShop={likeCarShop} />
       {
         search.length !== 0 && <SearchPage search={search} category={category} />
       }
@@ -674,8 +721,8 @@ export default function App() {
           <>
             <SalesCarousel />
             <Category />
-            <FlashSale />
-            <ForYou onSelect={setSpecialCategories} selectedCategories={specialCategories} />
+            <FlashSale onApply={handleLikeCard} />
+            <ForYou onSelect={setSpecialCategories} selectedCategories={specialCategories} onApply={handleLikeCard} />
             <BestSell />
             <Contacts />
           </>
