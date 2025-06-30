@@ -5,7 +5,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Toaster } from '@/components/ui/sonner';
-import { Bell, BookText, ChevronRight, Circle, MessageCircle, Search, SendHorizontal, User, Users } from 'lucide-react';
+import { Bell, BookText, ChevronRight, Circle, Ellipsis, File, MessageCircle, Search, SendHorizontal, User, Users } from 'lucide-react';
 import { Inter } from 'next/font/google';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -574,8 +574,8 @@ function UserCarouselItem({ user, onSendMessage }: { user: User; onSendMessage: 
   }
 
   return (
-    <CarouselItem key={name} className="pl-2 mb-2 basis-1/3 lg:basis-1/4 lg:pl-4">
-      <Card className='grid h-56 gap-2 text-center text-black bg-white border-none' style={{ gridTemplateRows: '50% 1fr 1fr 1fr' }}>
+    <CarouselItem key={name} className="pl-2 mb-2 basis-1/2 md:basis-1/3 lg:pl-4">
+      <Card className='grid h-56 max-w-40 md:max-w-48 gap-2 text-center text-black bg-white border-none' style={{ gridTemplateRows: '50% 1fr 1fr 1fr' }}>
         <img src={avatar} className='object-fill w-full h-full rounded-t-md' alt="avatar" />
         <p className='font-bold'>{name}</p>
         <p className='text-xs font-bold text-gray-400'>{`${age} yo • ${neighborhood}`}</p>
@@ -592,7 +592,9 @@ function UserCarouselItem({ user, onSendMessage }: { user: User; onSendMessage: 
 }
 function NearByCarousel({ onSendMessage }: { onSendMessage: (message: Message) => void; }) {
   return (
-    <Carousel >
+    <Carousel opts={{
+      align: "start"
+    }}>
       <section className='flex items-center justify-between mb-4'>
         <div className='flex items-center gap-2'>
           <Circle className='w-3 h-3 text-green-500' fill='#22c55e' />
@@ -681,7 +683,7 @@ function PostCard({ post, onReply }: { post: Post; onReply: (title: string, repl
   }
 
   return (
-    <Card key={user.name} className='w-fit text-black bg-white border-none mb-4'>
+    <Card key={user.name} className='w-full text-black bg-white border-none mb-4'>
       <CardHeader className='p-4 flex-row items-center gap-2 pb-0'>
         <Avatar>
           <AvatarImage src={user.avatar} />
@@ -707,7 +709,7 @@ function PostCard({ post, onReply }: { post: Post; onReply: (title: string, repl
             <MessageCircle className='text-gray-400 w-4 h-4' strokeWidth={3} />
             {replies.length}
           </div>
-          <Button className='shadow-none bg-pink-100 text-pink-500 place-self-end' onClick={() => setReplyMode(true)}>
+          <Button className='shadow-none bg-pink-100 text-pink-500 place-self-end hover:bg-pink-200 ' onClick={() => setReplyMode(true)}>
             Reply
           </Button>
         </div>
@@ -772,7 +774,7 @@ function UserCard({ user, onSendMessage }: { user: User; onSendMessage: (message
         <Input className="w-full" value={message} onChange={(e) => setMessage(e.target.value)} />
         <SendHorizontal className="h-6 w-8 rounded-full text-pink-500 cursor-pointer" strokeWidth={3} onClick={handleSendMessage} />
       </div>
-      <Button className={`shadow-none bg-pink-100 text-pink-500 mb-2 mx-2 ${!messageMode ? 'block' : 'hidden'}`} onClick={() => setMessageMode(true)}>
+      <Button className={`shadow-none bg-pink-100 text-pink-500 hover:bg-pink-200 mb-2 mx-2 ${!messageMode ? 'block' : 'hidden'}`} onClick={() => setMessageMode(true)}>
         Message
       </Button>
     </Card>
@@ -801,7 +803,7 @@ function SearchPage({ search, onSendMessage }: { search: string; onSendMessage: 
       {filteredUsers.length === 0 && (
         <div className='font-medium text-xl mb-4 md:text-2xl md:pt-5 flex flex-col items-center mt-20'>
           <img src="https://cdn.prod.website-files.com/5d5e2ff58f10c53dcffd8683/5d5e30af8983562001c60dc6_sitting.svg" alt="girl" className='w-1/2' />
-          <p>Sorry, we couldn't find any results :(</p>
+          <p>{"Sorry, we couldn't find any results :("}</p>
         </div>
       )}
     </div>
@@ -810,7 +812,7 @@ function SearchPage({ search, onSendMessage }: { search: string; onSendMessage: 
 
 function MessagesPage({ messages }: { messages: (User & { text: string })[] }) {
   function handleClickMessage() {
-    toast.info('This feature: coming soon!', { richColors: true })
+    toast.info('Coming soon!', { richColors: true })
   }
   return (
     <div className='p-3'>
@@ -837,13 +839,48 @@ function MessagesPage({ messages }: { messages: (User & { text: string })[] }) {
 
 function ProfilePage({ user }: { user: User }) {
   return (
-    <div className="min-h-[80vh]">
-      <Avatar className="w-28 h-28 m-auto mt-32 outline-dashed outline-offset-4 outline-pink-500">
-        <AvatarImage src={user.avatar} />
-      </Avatar>
-      <p className='text-lg text-center mt-8 font-bold'>{user.name}</p>
-      <p className='text-lg text-center'>{user.age} years old</p>
-      <p className='text-lg text-center'>{user.city} • {user.neighborhood}</p>
+    <div className="w-full min-h-[80vh] p-4">
+      <header className="text-black gap-2 w-full">
+        <section className="flex w-full justify-between items-center h-fit">
+          <h2 className="text-2xl font-bold text-black">Profile</h2>
+          <Button className="rounded-full w-10 h-10  bg-transparent shadow-none hover:bg-transparent" onClick={() => toast.info('Coming soon!')}>
+            <Ellipsis className="text-black" />
+          </Button>
+        </section>
+        <Avatar className="w-28 h-28 m-auto mt-6 outline-dashed outline-offset-4 outline-pink-500">
+          <AvatarImage src={user.avatar} />
+        </Avatar>
+        <div className="w-fit flex py-1 px-2 rounded-full gap-2 items-center m-auto mt-6 text-black bg-pink-100">
+          <p className="text-xl font-bold">{user.name} • {user.age} years old</p>
+        </div>
+      </header>
+      <section className="mt-10">
+        <div className="flex items-center gap-1">
+          <Circle color="#ec4899" fill="#ec4899" className="w-2 h-2" />
+          <h2 className="text-lg font-medium">Your preferences</h2>
+        </div>
+        <article className="cursor-pointer flex gap-2 items-center w-full mt-8 md:mt-3 md:py-4 px-2" onClick={() => toast.info('Coming soon', { richColors: true })}>
+          <div className={`flex items-center justify-center rounded-full w-10 h-10 shadow-none border border-gray-200 bg-pink-500 p-2`}>
+            <File color="white" />
+          </div>
+          <div>
+            <p className="font-bold">Bio</p>
+            <p className="text-sm text-gray-600">Describe yourself to improve your matches</p>
+          </div>
+          <ChevronRight className="ml-auto" />
+        </article>
+        <article className="cursor-pointer flex gap-2 items-center w-full mt-8 md:mt-3 md:py-4 px-2" onClick={() => toast.info('Coming soon', { richColors: true })}>
+          <div className={`flex items-center justify-center rounded-full w-10 h-10 shadow-none border border-gray-200 bg-pink-500 p-2`}>
+            <File color="white" />
+          </div>
+          <div>
+            <p className="font-bold">Interests and tags</p>
+            <p className="text-sm text-gray-600">Your tags will be shown here</p>
+          </div>
+          <ChevronRight className="ml-auto" />
+        </article>
+
+      </section>
     </div>
   )
 }
@@ -868,7 +905,7 @@ function FollowingPage({ followingUsers, onUnfollow }: { followingUsers: (User &
             <img src={avatar} className='object-fill w-full h-full rounded-t-md' alt="avatar" />
             <p className='font-bold'>{name}</p>
             <p className='text-xs font-bold text-gray-400'>{`${age} yo • ${city}`}</p>
-            <Button className='shadow-none bg-pink-100 text-pink-500 mb-2 mx-2' onClick={() => onUnfollow(name)}>
+            <Button className='shadow-none bg-pink-100 text-pink-500 mb-2 mx-2 hover:bg-pink-200 ' onClick={() => onUnfollow(name)}>
               {following ? 'Unfollow' : 'Follow'}
             </Button>
           </Card>
@@ -900,6 +937,7 @@ export default function App() {
   }
 
   function handleClickIcon(e: React.MouseEvent<SVGSVGElement, MouseEvent>, id: string) {
+    setSearch('')
     setPlace(`${Math.round(e.currentTarget.getBoundingClientRect().left)}px`);
     setSelectedPage(id);
   }
@@ -910,10 +948,10 @@ export default function App() {
 
   return (
     <div className={`${font.className} min-h-screen h-screen w-screen bg-slate-100 text-black overflow-x-hidden`}>
-      <Toaster />
+      <Toaster richColors />
       <Header search={search} setSearch={onChangeSearch} onChangePage={setSelectedPage} />
       <div className='flex w-full bg-slate-100'>
-        <div className="h-[95vh] pb-20 w-1/5 sticky top-20 hidden md:block lg:w-1/3 overflow-y-scroll">
+        <div className="h-[95vh] pb-20 w-1/5 sticky top-20 hidden md:block lg:w-1/3 overflow-y-auto">
           <div className="bg-slate-100 text-gray-500 font-medium pt-10">
             <div className="flex flex-col gap-4">
               {PAGES.map(({ id, name, Icon }) => (
@@ -922,7 +960,7 @@ export default function App() {
                     setSearch('');
                     setSelectedPage(id);
                   }} className={twMerge('flex items-end gap-2 text-sm pl-3 lg:pl-10 hover:bg-slate-100 hover:text-gray-500 hover:font-bold', selectedPage === id && 'text-pink-500 font-semibold hover:text-pink-500')}>
-                    <Icon onClick={(e) => handleClickIcon(e, id)} className='w-5 h-5' />
+                    <Icon className='w-5 h-5' />
                     {name}
                   </button>
                 </div>
@@ -930,7 +968,7 @@ export default function App() {
             </div>
             <div className='pl-3 lg:pl-10 pt-5 lg:pt-10'>
               <p className='text-black font-semibold text-base'>Recently Joined <span className='text-sm text-pink-500 pl-1 hover:underline cursor-pointer' onClick={() => setSeeMore('recently')}>More</span></p>
-              <div className='flex gap-1 mb-3 pt-3 flex-wrap'>
+              <div className='flex gap-1 mb-3 pt-3 flex-wrap px-2'>
                 {RECENTLY_JOINED_USERS.slice(0, 6).map(({ avatar }) => (
                   <Avatar key={avatar} className='w-9 h-9'>
                     <AvatarImage src={avatar} />
