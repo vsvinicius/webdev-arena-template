@@ -2,14 +2,13 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem, } from "@/components/ui/carousel";
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Toaster } from "@/components/ui/sonner";
 import * as SliderPrimitive from "@radix-ui/react-slider"
-import { Bell, ChevronDown, Circle, ClipboardSignature, Copyright, Crown, Heart, LayoutGrid, Menu, Search, ShoppingBag, Smartphone, Star, Zap } from "lucide-react";
+import { Bell, ChevronDown, Circle, Copyright, Crown, Heart, LayoutGrid, Menu, Search, ShoppingBag, Smartphone, Star, Zap } from "lucide-react";
 import { Inter } from "next/font/google";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -19,7 +18,6 @@ const inter = Inter({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
 });
-
 type Vesture = {
   name: string;
   price: string;
@@ -31,13 +29,11 @@ type Vesture = {
   category: string;
   specialCategory: string;
 }
-
 type Shop = {
   mark: string;
   slogan: string;
   products: { img: string; price: number; }[]
 }
-
 const SALE_ITEMS: Vesture[] =
   [
     {
@@ -129,7 +125,6 @@ const SALE_ITEMS: Vesture[] =
       "specialCategory": "Special Discount"
     }
   ]
-
 const DIFFERENT_SHOP: Shop[] = [
   {
     "mark": "Nike Sae Mall",
@@ -204,7 +199,6 @@ const DIFFERENT_SHOP: Shop[] = [
     ]
   }
 ]
-
 const CATEGORIES = [
   {
     name: 'T-Shirt',
@@ -246,28 +240,71 @@ const SPECIAL_CATEGORIES = [
   'Official Store',
   'Coveted Product',
 ]
+const MENU_BELIBELI = [
+  'Mitra BeliBeli',
+  'About BeliBeli',
+  'BeliBeli Care',
+  'Promo'
+]
+const MENU_ABOUT = [
+  [
+    'Beli Beli',
+    'About BeliBeli',
+    'Career',
+    'Mitra Blog',
+    'B2B Digital'
+  ],
+  [
+    'Buy',
+    'Bill & Top Up',
+    'BeliBeli COD',
+    'Mitra Blog',
+    'Promo'
+  ],
+  [
+    'Sell',
+    'Seller Education Center',
+    'Brand Index',
+    'Register Official Store'
+  ],
+  [
+    'Guide and Help',
+    'BeliBeli Care',
+    'Term and Condition',
+    'Privacy',
+    'Mitra'
+  ]
+]
 
 function Header({ search, onChangeSearch, category, onChangeCategory, likeCarShop }: { search: string; onChangeSearch: React.Dispatch<React.SetStateAction<string>>; category: string; onChangeCategory: React.Dispatch<React.SetStateAction<string>>; likeCarShop: Vesture[] }) {
   return (
     <header className="w-full bg-white text-sm font-medium">
       <div className="text-gray-500 flex border-b border-gray-300 w-full px-2 md:px-16 py-2 justify-between items-center">
-        <div className="flex gap-2 items-end">
+        <div className="flex gap-2 items-end cursor-pointer">
           <Smartphone />
-          <a href="#">Download BeliBeli App</a>
+          <div onClick={() => toast.info("This feature is under development.")}>
+            Download BeliBeli App
+          </div>
         </div>
         <div className="hidden gap-4 md:flex">
-          <a href="#" className="hover:underline hover:text-black">Mitra BeliBeli</a>
-          <a href="#" className="hover:underline hover:text-black">About BeliBeli</a>
-          <a href="#" className="hover:underline hover:text-black">BeliBeli Care</a>
-          <a href="#" className="hover:underline hover:text-black">Promo</a>
+          {MENU_BELIBELI.map((name) => (
+            <div key={name} className="hover:underline hover:text-black cursor-pointer"
+              onClick={() => toast.info("This feature is under development.")}>
+              {name}
+            </div>
+          ))}
           <div className="py-1">
             <Separator orientation="vertical" />
           </div>
-          <a href="#" className="font-bold text-black">Sign up</a>
+          <div className="font-bold text-black cursor-pointer" onClick={() => toast.info("This feature is under development.")}>
+            Sign up
+          </div>
           <div className="py-1">
             <Separator orientation="vertical" />
           </div>
-          <a href="#" className="font-bold text-black">Login</a>
+          <div className="font-bold text-black cursor-pointer" onClick={() => toast.info("This feature is under development.")}>
+            Login
+          </div>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild className='md:hidden'>
@@ -279,8 +316,16 @@ function Header({ search, onChangeSearch, category, onChangeCategory, likeCarSho
             <DropdownMenuItem ><a href="#" className="px-2 hover:underline hover:text-black">BeliBeli Care</a></DropdownMenuItem>
             <DropdownMenuItem ><a href="#" className="px-2 hover:underline hover:text-black">Promo</a></DropdownMenuItem>
             <Separator className="bg-gray-400" />
-            <DropdownMenuItem><a href="#" className="px-2 font-bold">Sign up</a></DropdownMenuItem>
-            <DropdownMenuItem><a href="#" className="px-2 font-bold">Login</a></DropdownMenuItem>
+            <DropdownMenuItem>
+              <div className="px-2 font-bold" onClick={() => toast.info("This feature is under development.")}>
+                Sign up
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <div className="px-2 font-bold" onClick={() => toast.info("This feature is under development.")}>
+                Login
+              </div>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -341,7 +386,9 @@ function Header({ search, onChangeSearch, category, onChangeCategory, likeCarSho
                   )}
                 </div>
                 <div className="bg-[#F87171] rounded-lg w-20 flex justify-center font-semibold ml-28">
-                  <button className="text-lg">Buy</button>
+                  <button className="text-lg" onClick={() => toast.info("This feature is under development.")}>
+                    Buy
+                  </button>
                 </div>
               </div>
             </SheetContent>
@@ -437,8 +484,8 @@ function ItemCard({ className, hideSlider, addStar, onApply, ...props }: Vesture
   }
   return (
     <Card className={twMerge("relative overflow-hidden bg-white w-full h-96 border-none", className)}>
-      <div className="absolute right-5 top-4 p-1 flex items-center justify-center" onClick={() => handleLike()}>
-        <Heart className={twMerge("text-white fill-white w-6 h-6 transition-all duration-200", liked && 'fill-red-500 text-red-500')} />
+      <div className="absolute right-5 top-4 p-1 bg-white rounded-full flex items-center justify-center" onClick={() => handleLike()}>
+        <Heart className={twMerge("text-gray-300 fill-gray-300 w-6 h-6 transition-all duration-200", liked && 'fill-red-500 text-red-500')} />
       </div>
       <div className="text-black h-full">
         <img src={imageSrc} alt="Vesture items" className="h-3/5 w-full" />
@@ -656,33 +703,16 @@ function Contacts() {
           </div>
         </div>
         <div className="flex text-sm flex-wrap items-start justify-between pb-4 w-2/3 gap-3 md:gap-0 my-4 md:my-0">
-          <div className="flex flex-col w-[45%] md:w-fit gap-1 md:gap-3 md:h-full">
-            <p className="text-[#777C80] font-bold">BeliBeli</p>
-            <a href="#" className="hover:underline">About BeliBeli</a>
-            <a href="#" className="hover:underline">Career</a>
-            <a href="#" className="hover:underline">Mitra Blog</a>
-            <a href="#" className="hover:underline">B2B Digital</a>
-          </div>
-          <div className="flex flex-col w-[45%] md:w-fit gap-1 md:gap-3 md:h-full">
-            <p className="text-[#777C80] font-bold">Buy</p>
-            <a href="#" className="hover:underline">Bill & Top Up</a>
-            <a href="#" className="hover:underline">CarBeliBeli CODeer</a>
-            <a href="#" className="hover:underline">Mitra Blog</a>
-            <a href="#" className="hover:underline">Promo</a>
-          </div>
-          <div className="flex flex-col w-[45%] md:w-fit gap-1 md:gap-3 md:h-full">
-            <p className="text-[#777C80] font-bold">Sell</p>
-            <a href="#" className="hover:underline">Seller Education Center</a>
-            <a href="#" className="hover:underline">Brand Index</a>
-            <a href="#" className="hover:underline">Register Official Store</a>
-          </div>
-          <div className="flex flex-col w-[45%] md:w-fit gap-1 md:gap-3 md:h-full">
-            <p className="text-[#777C80] font-bold">Guide and Help</p>
-            <a href="#" className="hover:underline">BeliBeli Care</a>
-            <a href="#" className="hover:underline">Term and Condition</a>
-            <a href="#" className="hover:underline">Privacy</a>
-            <a href="#" className="hover:underline">Mitra</a>
-          </div>
+          {MENU_ABOUT.map((menu) => (
+            <div className="flex flex-col w-[45%] md:w-fit gap-1 md:gap-3 md:h-full">
+              {menu.map((title, i) => (
+                <p className={twMerge("hover:underline cursor-pointer", i === 0 && "text-[#777C80] text-base font-bold hover:no-underline cursor-default")}
+                  onClick={() => i !== 0 ? toast.info("This feature is under development.") : null}>
+                  {title}
+                </p>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
       <div className="w-full h-10 border-t border-gray-600 flex items-center justify-center gap-2 text-gray-400 text-sm md:text-base">
