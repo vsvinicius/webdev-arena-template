@@ -4,9 +4,11 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { Bell, BookText, ChevronRight, Circle, MessageCircle, Search, SendHorizontal, User, Users } from 'lucide-react';
+import { Toaster } from '@/components/ui/sonner';
+import { Bell, BookText, ChevronRight, Circle, Ellipsis, File, MessageCircle, Search, SendHorizontal, User, Users } from 'lucide-react';
 import { Inter } from 'next/font/google';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 
 const font = Inter({
@@ -525,10 +527,14 @@ const POPULAR_CITIES: City[] = [
 
 
 function Header({ search, setSearch, onChangePage }: { search: string; setSearch: (value: string) => void; onChangePage: (page: string) => void; }) {
+  function handlePageChange(page: string) {
+    setSearch('');
+    onChangePage(page);
+  }
   return (
-    <header className='flex items-center justify-between w-full gap-2 p-2 bg-white border-b border-gray-200 h-14 md:h-20 md:px-8'>
+    <header className='sticky top-0 z-10 flex items-center justify-between w-full gap-2 p-2 bg-white border-b border-gray-200 h-14 md:h-20 md:px-8'>
       <img src="https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png" alt="logo" className='w-10 h-10 cursor-pointer md:h-14 md:w-14' onClick={() => onChangePage('main')} />
-      <div className="max-w-96 flex items-center gap-1 rounded-md bg-[#EFF1F7] border-none border px-4 focus-within:ring-1 focus-within:ring-ring w-full md:mr-96">
+      <div className="max-w-96 flex items-center gap-1 rounded-md bg-slate-100 border-none border px-4 focus-within:ring-1 focus-within:ring-ring w-full lg:mr-96">
         <Search className="w-4 h-4 text-gray-400" strokeWidth={3} />
         <Input className="p-0 border-none shadow-none focus-visible:outline-none focus-visible:ring-0 placeholder:text-gray-500" placeholder="Search for a match by city, age, gender..."
           value={search}
@@ -538,18 +544,18 @@ function Header({ search, setSearch, onChangePage }: { search: string; setSearch
       <div className='flex items-center justify-center gap-2 md:gap-4'>
         <Button
           className="w-8 h-8 bg-transparent rounded-full shadow-none hover:bg-transparent hover:ring-1 hover:ring-ring transition-all duration-200"
-          onClick={() => onChangePage('messages')}
+          onClick={() => handlePageChange('messages')}
         >
           <MessageCircle className='text-gray-400' strokeWidth={3} />
         </Button>
 
         <Button
           className="w-8 h-8 bg-transparent rounded-full shadow-none hover:bg-transparent hover:ring-1 hover:ring-ring transition-all duration-200"
-          onClick={() => onChangePage('activity')}
+          onClick={() => handlePageChange('activity')}
         >
           <Bell className='text-gray-400' strokeWidth={3} />
         </Button>
-        <Avatar onClick={() => onChangePage('profile')} className='hover:ring-1 hover:ring-ring transition-all duration-200 cursor-pointer'>
+        <Avatar onClick={() => handlePageChange('profile')} className='hover:ring-1 hover:ring-ring transition-all duration-200 cursor-pointer'>
           <AvatarImage src="https://picsum.photos/id/64/200" />
         </Avatar>
       </div>
@@ -568,16 +574,16 @@ function UserCarouselItem({ user, onSendMessage }: { user: User; onSendMessage: 
   }
 
   return (
-    <CarouselItem key={name} className="pl-2 mb-2 basis-1/3 md:basis-1/4 md:pl-4">
-      <Card className='grid h-56 gap-2 text-center text-black bg-white border-none' style={{ gridTemplateRows: '50% 1fr 1fr 1fr' }}>
+    <CarouselItem key={name} className="pl-2 mb-2 basis-1/2 md:basis-1/3 lg:pl-4 xl:basis-1/4 2xl:basis-1/6">
+      <Card className='grid h-56 max-w-40 md:max-w-48 gap-2 text-center text-black bg-white border-none' style={{ gridTemplateRows: '50% 1fr 1fr 1fr' }}>
         <img src={avatar} className='object-fill w-full h-full rounded-t-md' alt="avatar" />
         <p className='font-bold'>{name}</p>
         <p className='text-xs font-bold text-gray-400'>{`${age} yo • ${neighborhood}`}</p>
         <div className={`flex items-center gap-2 mx-2 justify-items-center mb-2 ${messageMode ? 'block' : 'hidden'}`}>
           <Input className="w-full" value={message} onChange={(e) => setMessage(e.target.value)} />
-          <SendHorizontal className="h-6 w-8 rounded-full text-[#FF3AB2] cursor-pointer" strokeWidth={3} onClick={handleSendMessage} />
+          <SendHorizontal className="h-6 w-8 rounded-full text-pink-500 cursor-pointer" strokeWidth={3} onClick={handleSendMessage} />
         </div>
-        <Button className={`shadow-none bg-[#F6E6F3] text-[#FF3AB2] mb-2 mx-2 ${!messageMode ? 'block' : 'hidden'}`} onClick={() => setMessageMode(true)}>
+        <Button className={`shadow-none bg-pink-100 text-pink-500 mb-2 mx-2 hover:bg-pink-200 ${!messageMode ? 'block' : 'hidden'}`} onClick={() => setMessageMode(true)}>
           Message
         </Button>
       </Card>
@@ -586,7 +592,9 @@ function UserCarouselItem({ user, onSendMessage }: { user: User; onSendMessage: 
 }
 function NearByCarousel({ onSendMessage }: { onSendMessage: (message: Message) => void; }) {
   return (
-    <Carousel opts={{ loop: true }}>
+    <Carousel opts={{
+      align: "start"
+    }}>
       <section className='flex items-center justify-between mb-4'>
         <div className='flex items-center gap-2'>
           <Circle className='w-3 h-3 text-green-500' fill='#22c55e' />
@@ -595,8 +603,8 @@ function NearByCarousel({ onSendMessage }: { onSendMessage: (message: Message) =
           </h1>
         </div>
         <div className='flex gap-2'>
-          <CarouselPrevious className='translate-none static px-1 h-6 w-6 shadow-none bg-[#F6E6F3] border-none rounded-md text-[#FF3AB2] hover:bg-[#F6E6F3] hover:text-[#FF3AB2]' />
-          <CarouselNext className='translate-none static px-1 h-6 w-6 shadow-none bg-[#F6E6F3] border-none rounded-md text-[#FF3AB2] hover:bg-[#F6E6F3] hover:text-[#FF3AB2]' />
+          <CarouselPrevious className='translate-none static px-1 h-6 w-6 shadow-none bg-pink-100 border-none rounded-md text-pink-500 hover:bg-pink-100 hover:text-pink-500' />
+          <CarouselNext className='translate-none static px-1 h-6 w-6 shadow-none bg-pink-100 border-none rounded-md text-pink-500 hover:bg-pink-100 hover:text-pink-500' />
         </div>
       </section>
       <CarouselContent className="-ml-2 md:w-[50vw]">
@@ -610,7 +618,7 @@ function NearByCarousel({ onSendMessage }: { onSendMessage: (message: Message) =
 
 function RecentlyJoinedCarousel() {
   return (
-    <Carousel opts={{ loop: true }} className='bg-white p-2 rounded-lg mt-2 md:hidden'>
+    <div className='bg-white p-3 rounded-lg mt-2 md:hidden'>
       <section className='flex items-center justify-between mb-4'>
         <div className='flex items-center gap-2'>
           <h1 className='text-lg font-semibold'>
@@ -618,27 +626,29 @@ function RecentlyJoinedCarousel() {
           </h1>
         </div>
       </section>
-      <CarouselContent className="-ml-2">
-        {RECENTLY_JOINED_USERS.map(({ name, avatar, age, city }) => (
-          <CarouselItem key={name} className="pl-2 mb-2 basis-1/3 text-sm">
-            <Avatar>
-              <AvatarImage src={avatar} />
-            </Avatar>
-            <div>
-              <span className='font-semibold block'>{name}</span>
-              <span className='font-medium text-xs text-gray-500 relative bottom-1'>{age} yo </span>
-              <p className='text-xs font-semibold text-gray-400'>{city}</p>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-    </Carousel>
+      <Carousel opts={{ loop: true, align: 'start' }} >
+        <CarouselContent className="-ml-2">
+          {RECENTLY_JOINED_USERS.map(({ name, avatar, age, city }) => (
+            <CarouselItem key={name} className="pl-2 mb-2 basis-1/3 text-sm">
+              <Avatar>
+                <AvatarImage src={avatar} />
+              </Avatar>
+              <div>
+                <span className='font-semibold block'>{name}</span>
+                <span className='font-medium text-xs text-gray-500 relative bottom-1'>{age} yo </span>
+                <p className='text-xs font-semibold text-gray-400'>{city}</p>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+    </div>
   )
 }
 
 function PopularCitiesCarousel() {
   return (
-    <Carousel opts={{ loop: true }} className='bg-white p-2 rounded-lg mt-4 md:hidden'>
+    <div className='bg-white p-3 rounded-lg  mt-4 md:hidden'>
       <section className='flex items-center justify-between mb-4'>
         <div className='flex items-center gap-2'>
           <h1 className='text-lg font-semibold'>
@@ -646,20 +656,22 @@ function PopularCitiesCarousel() {
           </h1>
         </div>
       </section>
-      <CarouselContent className="-ml-2">
-        {POPULAR_CITIES.map(({ name, imageSrc, population }) => (
-          <CarouselItem key={name} className="pl-2 mb-2 basis-1/2 text-sm flex mr-2 ">
-            <Avatar className='rounded-md'>
-              <AvatarImage src={imageSrc} />
-            </Avatar>
-            <div className='ml-2'>
-              <span className='font-semibold block'>{name}</span>
-              <span className='font-medium text-xs text-gray-500'>{population} members</span>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-    </Carousel>
+      <Carousel opts={{ loop: true, align: 'start' }}>
+        <CarouselContent>
+          {POPULAR_CITIES.map(({ name, imageSrc, population }) => (
+            <CarouselItem key={name} className="mb-2 basis-1/2 text-sm flex">
+              <Avatar className='rounded-md'>
+                <AvatarImage src={imageSrc} />
+              </Avatar>
+              <div className='ml-2'>
+                <span className='font-semibold block'>{name}</span>
+                <span className='font-medium text-xs text-gray-500'>{population} members</span>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+    </div>
   )
 }
 
@@ -675,7 +687,7 @@ function PostCard({ post, onReply }: { post: Post; onReply: (title: string, repl
   }
 
   return (
-    <Card key={user.name} className='w-fit text-black bg-white border-none mb-4'>
+    <Card key={user.name} className='w-full text-black bg-white border-none mb-4'>
       <CardHeader className='p-4 flex-row items-center gap-2 pb-0'>
         <Avatar>
           <AvatarImage src={user.avatar} />
@@ -694,14 +706,14 @@ function PostCard({ post, onReply }: { post: Post; onReply: (title: string, repl
         <Separator className='bg-gray-200 my-4' />
         <div className={`flex w-full items-center gap-2 mx-2 justify-items-center mb-2 ${replyMode ? 'block' : 'hidden'}`}>
           <Input className="w-full" value={reply} onChange={(e) => setReply(e.target.value)} />
-          <SendHorizontal className="h-6 w-8 rounded-full text-[#FF3AB2] cursor-pointer" strokeWidth={3} onClick={() => handleSendReply(title)} />
+          <SendHorizontal className="h-6 w-8 rounded-full text-pink-500 cursor-pointer" strokeWidth={3} onClick={() => handleSendReply(title)} />
         </div>
         <div className={`justify-between w-full  ${!replyMode ? 'flex' : 'hidden'}`}>
           <div className='flex items-center gap-1 text-sm text-gray-500 font-medium place-self-end'>
             <MessageCircle className='text-gray-400 w-4 h-4' strokeWidth={3} />
             {replies.length}
           </div>
-          <Button className='shadow-none bg-[#F6E6F3] text-[#FF3AB2] place-self-end' onClick={() => setReplyMode(true)}>
+          <Button className='shadow-none bg-pink-100 text-pink-500 place-self-end hover:bg-pink-200 ' onClick={() => setReplyMode(true)}>
             Reply
           </Button>
         </div>
@@ -758,15 +770,15 @@ function UserCard({ user, onSendMessage }: { user: User; onSendMessage: (message
   }
 
   return (
-    <Card className='w-[45%] grid h-56 gap-2 text-center text-black bg-white border-none md:w-[20%]' style={{ gridTemplateRows: '50% 1fr 1fr 1fr' }}>
+    <Card className='w-[45%] max-w-60 lg:w-[30%] grid h-56 gap-2 text-center text-black bg-white border-none md:max-w-56' style={{ gridTemplateRows: '50% 1fr 1fr 1fr' }}>
       <img src={avatar} className='object-fill w-full h-full rounded-t-md' alt="avatar" />
       <p className='font-bold'>{name}</p>
       <p className='text-xs font-bold text-gray-400'>{`${age} yo • ${city}`}</p>
       <div className={`flex items-center gap-2 mx-2 justify-items-center mb-2 ${messageMode ? 'block' : 'hidden'}`}>
         <Input className="w-full" value={message} onChange={(e) => setMessage(e.target.value)} />
-        <SendHorizontal className="h-6 w-8 rounded-full text-[#FF3AB2] cursor-pointer" strokeWidth={3} onClick={handleSendMessage} />
+        <SendHorizontal className="h-6 w-8 rounded-full text-pink-500 cursor-pointer" strokeWidth={3} onClick={handleSendMessage} />
       </div>
-      <Button className={`shadow-none bg-[#F6E6F3] text-[#FF3AB2] mb-2 mx-2 ${!messageMode ? 'block' : 'hidden'}`} onClick={() => setMessageMode(true)}>
+      <Button className={`shadow-none bg-pink-100 text-pink-500 hover:bg-pink-200 mb-2 mx-2 ${!messageMode ? 'block' : 'hidden'}`} onClick={() => setMessageMode(true)}>
         Message
       </Button>
     </Card>
@@ -782,25 +794,37 @@ function SearchPage({ search, onSendMessage }: { search: string; onSendMessage: 
   ), [search]);
 
   return (
-    <div className='min-h-[80vh] p-3 bg-[#F4F6FA]'>
-      <h1 className='font-medium text-xl mb-4 md:text-2xl md:pt-5'>Your match is here!</h1>
-      <div className='flex flex-wrap gap-4'>
-        {filteredUsers.map((user) => (
-          <UserCard key={user.name} user={user} onSendMessage={onSendMessage} />
-        ))}
-      </div>
+    <div className='min-h-[80vh] p-3 bg-slate-100'>
+      {filteredUsers.length !== 0 &&
+        <>
+          <h1 className='font-medium text-xl mb-4 md:text-2xl md:pt-5'>Your match is here!</h1>
+          <div className='flex flex-wrap gap-4 justify-center items-center md:justify-normal'>
+            {filteredUsers.map((user) => (
+              <UserCard key={user.name} user={user} onSendMessage={onSendMessage} />
+            ))}
+          </div>
+        </>}
+      {filteredUsers.length === 0 && (
+        <div className='font-medium text-xl mb-4 md:text-2xl md:pt-5 flex flex-col items-center mt-20'>
+          <img src="https://cdn.prod.website-files.com/5d5e2ff58f10c53dcffd8683/5d5e30af8983562001c60dc6_sitting.svg" alt="girl" className='w-1/2' />
+          <p>{"Sorry, we couldn't find any results :("}</p>
+        </div>
+      )}
     </div>
   )
 }
 
 function MessagesPage({ messages }: { messages: (User & { text: string })[] }) {
+  function handleClickMessage() {
+    toast.info('Coming soon!', { richColors: true })
+  }
   return (
     <div className='p-3'>
       <h1 className="text-2xl font-bold tracking-tight mt-4">Your messages</h1>
       <section>
-        {messages.map(({ text, name, avatar }) => (
-          <article key={text} className="flex gap-2 items-center w-full mt-3 bg-white py-4 px-2 rounded-md border border-gray-200">
-            <div className={`flex items-center justify-center rounded-full w-10 h-10 shadow-none border border-gray-200 bg-[#2258DC] p-2`}>
+        {messages.map(({ text, name, avatar }, i) => (
+          <article key={text + name + i} className="flex gap-2 items-center w-full mt-3 bg-white py-4 px-2 rounded-md border border-gray-200 cursor-pointer" onClick={handleClickMessage}>
+            <div className={`flex items-center justify-center rounded-full w-10 h-10 shadow-none border border-gray-200 bg-blue-700 p-2`}>
               <Avatar>
                 <AvatarImage src={avatar} />
               </Avatar>
@@ -819,13 +843,48 @@ function MessagesPage({ messages }: { messages: (User & { text: string })[] }) {
 
 function ProfilePage({ user }: { user: User }) {
   return (
-    <div className="min-h-[80vh]">
-      <Avatar className="w-28 h-28 m-auto mt-32 outline-dashed outline-offset-4 outline-[#FF3AB2]">
-        <AvatarImage src={user.avatar} />
-      </Avatar>
-      <p className='text-lg text-center mt-8 font-bold'>{user.name}</p>
-      <p className='text-lg text-center'>{user.age} years old</p>
-      <p className='text-lg text-center'>{user.city} • {user.neighborhood}</p>
+    <div className="w-full h-full p-4">
+      <header className="text-black gap-2 w-full">
+        <section className="flex w-full justify-between items-center h-fit">
+          <h2 className="text-2xl font-bold text-black">Profile</h2>
+          <Button className="rounded-full w-10 h-10  bg-transparent shadow-none hover:bg-transparent" onClick={() => toast.info('Coming soon!')}>
+            <Ellipsis className="text-black" />
+          </Button>
+        </section>
+        <Avatar className="w-28 h-28 m-auto mt-6 outline-dashed outline-offset-4 outline-pink-500">
+          <AvatarImage src={user.avatar} />
+        </Avatar>
+        <div className="w-fit flex py-1 px-2 rounded-full gap-2 items-center m-auto mt-6 text-black bg-pink-100">
+          <p className="text-xl font-bold">{user.name} • {user.age} years old</p>
+        </div>
+      </header>
+      <section className="mt-10">
+        <div className="flex items-center gap-1">
+          <Circle color="#ec4899" fill="#ec4899" className="w-2 h-2" />
+          <h2 className="text-lg font-medium">Your preferences</h2>
+        </div>
+        <article className="cursor-pointer flex gap-2 items-center w-full mt-8 md:mt-3 md:py-4 px-2" onClick={() => toast.info('Coming soon', { richColors: true })}>
+          <div className={`flex items-center justify-center rounded-full w-10 h-10 shadow-none border border-gray-200 bg-pink-500 p-2`}>
+            <File color="white" />
+          </div>
+          <div>
+            <p className="font-bold">Bio</p>
+            <p className="text-sm text-gray-600">Describe yourself to improve your matches</p>
+          </div>
+          <ChevronRight className="ml-auto" />
+        </article>
+        <article className="cursor-pointer flex gap-2 items-center w-full mt-8 md:mt-3 md:py-4 px-2" onClick={() => toast.info('Coming soon', { richColors: true })}>
+          <div className={`flex items-center justify-center rounded-full w-10 h-10 shadow-none border border-gray-200 bg-pink-500 p-2`}>
+            <File color="white" />
+          </div>
+          <div>
+            <p className="font-bold">Interests and tags</p>
+            <p className="text-sm text-gray-600">Your tags will be shown here</p>
+          </div>
+          <ChevronRight className="ml-auto" />
+        </article>
+
+      </section>
     </div>
   )
 }
@@ -842,15 +901,15 @@ function NotificationsPage() {
 
 function FollowingPage({ followingUsers, onUnfollow }: { followingUsers: (User & { following: boolean })[]; onUnfollow: (name: string) => void; }) {
   return (
-    <div className='min-h-[80vh] p-3 bg-[#F4F6FA]'>
+    <div className='min-h-[80vh] p-3 bg-slate-100'>
       <h1 className='font-medium text-xl mb-4'>Profiles you follow</h1>
       <div className='flex flex-wrap gap-4'>
         {followingUsers.map(({ avatar, name, age, city, following }) => (
-          <Card key={name} className='w-[45%] grid h-56 gap-2 text-center text-black bg-white border-none md:w-[20%]' style={{ gridTemplateRows: '50% 1fr 1fr 1fr' }}>
+          <Card key={name} className='w-[45%] grid h-56 gap-2 text-center text-black bg-white border-none md:w-[30%] max-w-60' style={{ gridTemplateRows: '50% 1fr 1fr 1fr' }}>
             <img src={avatar} className='object-fill w-full h-full rounded-t-md' alt="avatar" />
             <p className='font-bold'>{name}</p>
             <p className='text-xs font-bold text-gray-400'>{`${age} yo • ${city}`}</p>
-            <Button className='shadow-none bg-[#F6E6F3] text-[#FF3AB2] mb-2 mx-2' onClick={() => onUnfollow(name)}>
+            <Button className='shadow-none bg-pink-100 text-pink-500 mb-2 mx-2 hover:bg-pink-200 ' onClick={() => onUnfollow(name)}>
               {following ? 'Unfollow' : 'Follow'}
             </Button>
           </Card>
@@ -882,6 +941,7 @@ export default function App() {
   }
 
   function handleClickIcon(e: React.MouseEvent<SVGSVGElement, MouseEvent>, id: string) {
+    setSearch('')
     setPlace(`${Math.round(e.currentTarget.getBoundingClientRect().left)}px`);
     setSelectedPage(id);
   }
@@ -891,33 +951,37 @@ export default function App() {
   }
 
   return (
-    <div className={`${font.className} min-h-screen h-screen w-screen bg-[#F4F6FA] text-black overflow-x-hidden`}>
+    <div className={`${font.className} min-h-screen h-screen w-screen bg-slate-100 text-black overflow-x-hidden overflow-hidden`}>
+      <Toaster richColors />
       <Header search={search} setSearch={onChangeSearch} onChangePage={setSelectedPage} />
-      <div className='flex w-full bg-[#F4F6FA]'>
-        <div className="h-full w-1/3 sticky top-0 hidden md:block">
-          <div className="bg-[#F4F6FA] text-gray-500 font-medium pt-10">
+      <div className='flex w-full bg-slate-100 h-full'>
+        <div className="h-[95vh] pb-20 w-1/5 sticky top-20 hidden md:block lg:w-1/3 overflow-y-auto">
+          <div className="bg-slate-100 text-gray-500 font-medium pt-10">
             <div className="flex flex-col gap-4">
               {PAGES.map(({ id, name, Icon }) => (
-                <div className={twMerge(selectedPage === id && 'text-[#FF3AB2] font-semibold')} key={id}>
-                  <button onClick={() => setSelectedPage(id)} className={twMerge('flex items-end gap-2 text-sm pl-10 hover:bg-[#F4F6FA] hover:text-gray-500 hover:font-bold', selectedPage === id && 'text-[#FF3AB2] font-semibold hover:text-[#FF3AB2]')}>
-                    <Icon onClick={(e) => handleClickIcon(e, id)} className='w-5 h-5' />
+                <div className={twMerge(selectedPage === id && 'text-pink-500 font-semibold')} key={id}>
+                  <button onClick={() => {
+                    setSearch('');
+                    setSelectedPage(id);
+                  }} className={twMerge('flex items-end gap-2 text-sm pl-3 lg:pl-10 hover:bg-slate-100 hover:text-gray-500 hover:font-bold', selectedPage === id && 'text-pink-500 font-semibold hover:text-pink-500')}>
+                    <Icon className='w-5 h-5' />
                     {name}
                   </button>
                 </div>
               ))}
             </div>
-            <div className='pl-10 pt-10'>
-              <p className='text-black font-semibold text-base'>Recently Joined <span className='text-sm text-[#FF3AB2] pl-1 hover:underline cursor-pointer' onClick={() => setSeeMore('recently')}>More</span></p>
-              <div className='flex gap-1 mt-3'>
-                {RECENTLY_JOINED_USERS.slice(0, 5).map(({ avatar }) => (
+            <div className='pl-3 lg:pl-10 pt-5 lg:pt-10'>
+              <p className='text-black font-semibold text-base'>Recently Joined <span className='text-sm text-pink-500 pl-1 hover:underline cursor-pointer' onClick={() => setSeeMore('recently')}>More</span></p>
+              <div className='flex gap-1 mb-3 pt-3 flex-wrap px-2'>
+                {RECENTLY_JOINED_USERS.slice(0, 6).map(({ avatar }) => (
                   <Avatar key={avatar} className='w-9 h-9'>
                     <AvatarImage src={avatar} />
                   </Avatar>
                 ))}
               </div>
             </div>
-            <div className='pl-10 pt-10'>
-              <p className='text-black font-semibold text-base'>Popular cities <span className='text-sm text-[#FF3AB2] pl-1 hover:underline cursor-pointer' onClick={() => setSeeMore('cities')}>More</span></p>
+            <div className='pl-3 lg:pl-10 pt-3 lg:pt-10'>
+              <p className='text-black font-semibold text-base'>Popular cities <span className='text-sm text-pink-500 pl-1 hover:underline cursor-pointer' onClick={() => setSeeMore('cities')}>More</span></p>
               <div className='mt-3'>
                 {POPULAR_CITIES.slice(0, 3).map(({ imageSrc, name, population }) => (
                   <div key={imageSrc} className='flex items-center pb-3'>
@@ -934,7 +998,7 @@ export default function App() {
             </div>
           </div>
         </div>
-        <div className='w-full'>
+        <div className='w-full md:w-3/5 h-full overflow-auto pb-36'>
           {(selectedPage === 'main' && search.length === 0) && <ExplorePage posts={posts} onChangePost={setPosts} onSendMessage={(message) => setMessages(prevState => [...prevState, message])} />}
           {(selectedPage === 'search' || search.length > 0) && <SearchPage search={search} onSendMessage={(message) => setMessages(prevState => [...prevState, message])} />}
           {(selectedPage === 'messages' && search.length === 0) && <MessagesPage messages={messages} />}
@@ -942,7 +1006,7 @@ export default function App() {
           {(selectedPage === 'activity' && search.length === 0) && <NotificationsPage />}
           {(selectedPage === 'following' && search.length === 0) && <FollowingPage followingUsers={followingUsers} onUnfollow={handleToggleFollow} />}
         </div>
-        <div className='h-full w-1/3 sticky top-0 hidden md:block pl-10'>
+        <div className='sticky top-20 pb-20 hidden w-1/5 md:block px-3 lg:pl-10 lg:w-1/3 overflow-auto h-[95vh]'>
           <h1 className='text-lg font-semibold mt-10 mb-4'>
             {seeMore === 'recently' ? 'Recently joined' : 'Popular cities'}
           </h1>
@@ -954,7 +1018,7 @@ export default function App() {
                 </Avatar>
                 <div>
                   <span className='font-semibold'>{name}</span>
-                  <span className='font-medium text-xs text-gray-500 pl-1'> • {age} yo </span>
+                  <span className='font-medium text-xs text-gray-500 pl-1 whitespace-nowrap'> • {age} yo </span>
                   <p className='text-xs font-semibold text-gray-400'>{city}</p>
                 </div>
               </div>
@@ -975,13 +1039,13 @@ export default function App() {
           </div>
         </div>
       </div>
-      <footer className='sticky h-20 bg-[#F6E6F3] w-full bottom-0 rounded-lg px-2 shadow-lg md:hidden'>
+      <footer className='sticky h-20 bg-pink-100 w-full bottom-0 rounded-lg px-2 shadow-lg md:hidden'>
         <div className='flex items-center justify-center w-full h-full relative'>
           {
             PAGES.map(({ id, name, Icon }, i) => (
               <div className="relative w-full flex flex-col items-center" key={id}>
-                <Icon ref={i === 0 ? animationRef : undefined} onClick={(e) => handleClickIcon(e, id)} className={twMerge('text-white', selectedPage === id && 'text-[#FF3AB2]')} />
-                <p className={twMerge('mt-1 text-xs transition-all duration-500 text-white', selectedPage === id && 'text-[#FF3AB2] font-semibold')}>{name}</p>
+                <Icon ref={i === 0 ? animationRef : undefined} onClick={(e) => handleClickIcon(e, id)} className={twMerge('text-gray-400', selectedPage === id && 'text-pink-500')} />
+                <p className={twMerge('mt-1 text-xs transition-all duration-500 text-gray-400', selectedPage === id && 'text-pink-500 font-semibold')}>{name}</p>
               </div>
             ))
           }
