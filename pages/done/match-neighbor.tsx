@@ -574,7 +574,7 @@ function UserCarouselItem({ user, onSendMessage }: { user: User; onSendMessage: 
   }
 
   return (
-    <CarouselItem key={name} className="pl-2 mb-2 basis-1/2 md:basis-1/3 lg:pl-4">
+    <CarouselItem key={name} className="pl-2 mb-2 basis-1/2 md:basis-1/3 lg:pl-4 xl:basis-1/4 2xl:basis-1/6">
       <Card className='grid h-56 max-w-40 md:max-w-48 gap-2 text-center text-black bg-white border-none' style={{ gridTemplateRows: '50% 1fr 1fr 1fr' }}>
         <img src={avatar} className='object-fill w-full h-full rounded-t-md' alt="avatar" />
         <p className='font-bold'>{name}</p>
@@ -618,7 +618,7 @@ function NearByCarousel({ onSendMessage }: { onSendMessage: (message: Message) =
 
 function RecentlyJoinedCarousel() {
   return (
-    <Carousel opts={{ loop: true }} className='bg-white p-2 rounded-lg mt-2 md:hidden'>
+    <div className='bg-white p-3 rounded-lg mt-2 md:hidden'>
       <section className='flex items-center justify-between mb-4'>
         <div className='flex items-center gap-2'>
           <h1 className='text-lg font-semibold'>
@@ -626,27 +626,29 @@ function RecentlyJoinedCarousel() {
           </h1>
         </div>
       </section>
-      <CarouselContent className="-ml-2">
-        {RECENTLY_JOINED_USERS.map(({ name, avatar, age, city }) => (
-          <CarouselItem key={name} className="pl-2 mb-2 basis-1/3 text-sm">
-            <Avatar>
-              <AvatarImage src={avatar} />
-            </Avatar>
-            <div>
-              <span className='font-semibold block'>{name}</span>
-              <span className='font-medium text-xs text-gray-500 relative bottom-1'>{age} yo </span>
-              <p className='text-xs font-semibold text-gray-400'>{city}</p>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-    </Carousel>
+      <Carousel opts={{ loop: true, align: 'start' }} >
+        <CarouselContent className="-ml-2">
+          {RECENTLY_JOINED_USERS.map(({ name, avatar, age, city }) => (
+            <CarouselItem key={name} className="pl-2 mb-2 basis-1/3 text-sm">
+              <Avatar>
+                <AvatarImage src={avatar} />
+              </Avatar>
+              <div>
+                <span className='font-semibold block'>{name}</span>
+                <span className='font-medium text-xs text-gray-500 relative bottom-1'>{age} yo </span>
+                <p className='text-xs font-semibold text-gray-400'>{city}</p>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+    </div>
   )
 }
 
 function PopularCitiesCarousel() {
   return (
-    <Carousel opts={{ loop: true }} className='bg-white p-2 rounded-lg mt-4 md:hidden'>
+    <div className='bg-white p-3 rounded-lg  mt-4 md:hidden'>
       <section className='flex items-center justify-between mb-4'>
         <div className='flex items-center gap-2'>
           <h1 className='text-lg font-semibold'>
@@ -654,20 +656,22 @@ function PopularCitiesCarousel() {
           </h1>
         </div>
       </section>
-      <CarouselContent className="-ml-2">
-        {POPULAR_CITIES.map(({ name, imageSrc, population }) => (
-          <CarouselItem key={name} className="pl-2 mb-2 basis-1/2 text-sm flex mr-2 ">
-            <Avatar className='rounded-md'>
-              <AvatarImage src={imageSrc} />
-            </Avatar>
-            <div className='ml-2'>
-              <span className='font-semibold block'>{name}</span>
-              <span className='font-medium text-xs text-gray-500'>{population} members</span>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-    </Carousel>
+      <Carousel opts={{ loop: true, align: 'start' }}>
+        <CarouselContent>
+          {POPULAR_CITIES.map(({ name, imageSrc, population }) => (
+            <CarouselItem key={name} className="mb-2 basis-1/2 text-sm flex">
+              <Avatar className='rounded-md'>
+                <AvatarImage src={imageSrc} />
+              </Avatar>
+              <div className='ml-2'>
+                <span className='font-semibold block'>{name}</span>
+                <span className='font-medium text-xs text-gray-500'>{population} members</span>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+    </div>
   )
 }
 
@@ -766,7 +770,7 @@ function UserCard({ user, onSendMessage }: { user: User; onSendMessage: (message
   }
 
   return (
-    <Card className='w-[45%] grid h-56 gap-2 text-center text-black bg-white border-none md:w-[20%]' style={{ gridTemplateRows: '50% 1fr 1fr 1fr' }}>
+    <Card className='w-[45%] max-w-60 lg:w-[30%] grid h-56 gap-2 text-center text-black bg-white border-none md:max-w-56' style={{ gridTemplateRows: '50% 1fr 1fr 1fr' }}>
       <img src={avatar} className='object-fill w-full h-full rounded-t-md' alt="avatar" />
       <p className='font-bold'>{name}</p>
       <p className='text-xs font-bold text-gray-400'>{`${age} yo • ${city}`}</p>
@@ -794,7 +798,7 @@ function SearchPage({ search, onSendMessage }: { search: string; onSendMessage: 
       {filteredUsers.length !== 0 &&
         <>
           <h1 className='font-medium text-xl mb-4 md:text-2xl md:pt-5'>Your match is here!</h1>
-          <div className='flex flex-wrap gap-4'>
+          <div className='flex flex-wrap gap-4 justify-center items-center md:justify-normal'>
             {filteredUsers.map((user) => (
               <UserCard key={user.name} user={user} onSendMessage={onSendMessage} />
             ))}
@@ -839,7 +843,7 @@ function MessagesPage({ messages }: { messages: (User & { text: string })[] }) {
 
 function ProfilePage({ user }: { user: User }) {
   return (
-    <div className="w-full min-h-[80vh] p-4">
+    <div className="w-full h-full p-4">
       <header className="text-black gap-2 w-full">
         <section className="flex w-full justify-between items-center h-fit">
           <h2 className="text-2xl font-bold text-black">Profile</h2>
@@ -901,7 +905,7 @@ function FollowingPage({ followingUsers, onUnfollow }: { followingUsers: (User &
       <h1 className='font-medium text-xl mb-4'>Profiles you follow</h1>
       <div className='flex flex-wrap gap-4'>
         {followingUsers.map(({ avatar, name, age, city, following }) => (
-          <Card key={name} className='w-[45%] grid h-56 gap-2 text-center text-black bg-white border-none md:w-[20%]' style={{ gridTemplateRows: '50% 1fr 1fr 1fr' }}>
+          <Card key={name} className='w-[45%] grid h-56 gap-2 text-center text-black bg-white border-none md:w-[30%] max-w-60' style={{ gridTemplateRows: '50% 1fr 1fr 1fr' }}>
             <img src={avatar} className='object-fill w-full h-full rounded-t-md' alt="avatar" />
             <p className='font-bold'>{name}</p>
             <p className='text-xs font-bold text-gray-400'>{`${age} yo • ${city}`}</p>
@@ -947,10 +951,10 @@ export default function App() {
   }
 
   return (
-    <div className={`${font.className} min-h-screen h-screen w-screen bg-slate-100 text-black overflow-x-hidden`}>
+    <div className={`${font.className} min-h-screen h-screen w-screen bg-slate-100 text-black overflow-x-hidden overflow-hidden`}>
       <Toaster richColors />
       <Header search={search} setSearch={onChangeSearch} onChangePage={setSelectedPage} />
-      <div className='flex w-full bg-slate-100'>
+      <div className='flex w-full bg-slate-100 h-full'>
         <div className="h-[95vh] pb-20 w-1/5 sticky top-20 hidden md:block lg:w-1/3 overflow-y-auto">
           <div className="bg-slate-100 text-gray-500 font-medium pt-10">
             <div className="flex flex-col gap-4">
@@ -994,7 +998,7 @@ export default function App() {
             </div>
           </div>
         </div>
-        <div className='w-full md:w-3/5'>
+        <div className='w-full md:w-3/5 h-full overflow-auto pb-36'>
           {(selectedPage === 'main' && search.length === 0) && <ExplorePage posts={posts} onChangePost={setPosts} onSendMessage={(message) => setMessages(prevState => [...prevState, message])} />}
           {(selectedPage === 'search' || search.length > 0) && <SearchPage search={search} onSendMessage={(message) => setMessages(prevState => [...prevState, message])} />}
           {(selectedPage === 'messages' && search.length === 0) && <MessagesPage messages={messages} />}
