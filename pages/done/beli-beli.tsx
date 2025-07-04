@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Toaster } from "@/components/ui/sonner";
 import * as SliderPrimitive from "@radix-ui/react-slider"
-import { Bell, ChevronDown, Circle, Copyright, Crown, Heart, LayoutGrid, Menu, Minus, Plus, Search, ShoppingBag, Smartphone, Star, Zap } from "lucide-react";
+import { Bell, Check, ChevronDown, Circle, Copyright, Crown, Heart, LayoutGrid, Menu, Minus, Plus, Search, ShoppingBag, ShoppingCart, Smartphone, Star, Zap } from "lucide-react";
 import { Inter } from "next/font/google";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -23,7 +23,7 @@ type Vesture = {
   price: string;
   salePrice: string;
   totalItems: number;
-  remainingItems: number;
+  soldItems: number;
   imageSrc: string;
   stars: string;
   category: string;
@@ -40,8 +40,8 @@ const SALE_ITEMS: Vesture[] =
       "name": "White T-Shirt",
       "price": "$39.90",
       "salePrice": "$29.90",
-      "totalItems": 120,
-      "remainingItems": 42,
+      "totalItems": 45,
+      "soldItems": 42,
       "imageSrc": "https://picsum.photos/seed/tshirt/500/350",
       "stars": "4.5",
       "category": "Cap",
@@ -52,7 +52,7 @@ const SALE_ITEMS: Vesture[] =
       "price": "$89.90",
       "salePrice": "$69.90",
       "totalItems": 80,
-      "remainingItems": 17,
+      "soldItems": 17,
       "imageSrc": "https://picsum.photos/seed/denimjacket/500/350",
       "stars": "4.8",
       "category": "Watches",
@@ -63,7 +63,7 @@ const SALE_ITEMS: Vesture[] =
       "price": "$69.90",
       "salePrice": "$49.90",
       "totalItems": 150,
-      "remainingItems": 56,
+      "soldItems": 56,
       "imageSrc": "https://picsum.photos/seed/jeans/500/350",
       "stars": "4.2",
       "category": "Watches",
@@ -74,7 +74,7 @@ const SALE_ITEMS: Vesture[] =
       "price": "$59.90",
       "salePrice": "$44.90",
       "totalItems": 100,
-      "remainingItems": 23,
+      "soldItems": 23,
       "imageSrc": "https://picsum.photos/seed/hoodie/500/350",
       "stars": "4.6",
       "category": "Bag",
@@ -85,7 +85,7 @@ const SALE_ITEMS: Vesture[] =
       "price": "$54.90",
       "salePrice": "$39.90",
       "totalItems": 95,
-      "remainingItems": 30,
+      "soldItems": 30,
       "imageSrc": "https://picsum.photos/seed/chinos/500/350",
       "stars": "4.1",
       "category": "Jeans",
@@ -96,7 +96,7 @@ const SALE_ITEMS: Vesture[] =
       "price": "$79.90",
       "salePrice": "$59.90",
       "totalItems": 60,
-      "remainingItems": 14,
+      "soldItems": 14,
       "imageSrc": "https://picsum.photos/seed/dress/500/350",
       "stars": "4.9",
       "category": "Shirt",
@@ -107,7 +107,7 @@ const SALE_ITEMS: Vesture[] =
       "price": "$44.90",
       "salePrice": "$34.90",
       "totalItems": 110,
-      "remainingItems": 40,
+      "soldItems": 40,
       "imageSrc": "https://picsum.photos/seed/polo/500/350",
       "stars": "4.0",
       "category": "Jacket",
@@ -118,13 +118,125 @@ const SALE_ITEMS: Vesture[] =
       "price": "$89.90",
       "salePrice": "$69.90",
       "totalItems": 70,
-      "remainingItems": 12,
+      "soldItems": 12,
       "imageSrc": "https://picsum.photos/seed/cardigan/500/350",
       "stars": "4.7",
       "category": "T-Shirt",
       "specialCategory": "Special Discount"
     }
   ]
+const FOR_YOU_ITEMS: Vesture[] = [
+  {
+    "name": "Yellow Pants",
+    "price": "$39.90",
+    "salePrice": "$29.90",
+    "totalItems": 120,
+    "soldItems": 42,
+    "imageSrc": "https://picsum.photos/seed/tshirt/500/350",
+    "stars": "4.5",
+    "category": "Cap",
+    "specialCategory": "Coveted Product"
+  },
+  {
+    "name": "Black Hoodie",
+    "price": "$59.90",
+    "salePrice": "$44.90",
+    "totalItems": 80,
+    "soldItems": 18,
+    "imageSrc": "https://picsum.photos/seed/hoodie/500/350",
+    "stars": "4.8",
+    "category": "Hoodie",
+    "specialCategory": "Best Seller"
+  },
+  {
+    "name": "Blue Denim Jacket",
+    "price": "$99.90",
+    "salePrice": "$79.90",
+    "totalItems": 65,
+    "soldItems": 23,
+    "imageSrc": "https://picsum.photos/seed/denim/500/350",
+    "stars": "4.7",
+    "category": "Jacket",
+    "specialCategory": "Special Discount"
+  },
+  {
+    "name": "Graphic Tee",
+    "price": "$45.00",
+    "salePrice": "$35.00",
+    "totalItems": 100,
+    "soldItems": 56,
+    "imageSrc": "https://picsum.photos/seed/graphictee/500/350",
+    "stars": "4.3",
+    "category": "T-Shirt",
+    "specialCategory": "Official Store"
+  },
+  {
+    "name": "Running Sneakers",
+    "price": "$120.00",
+    "salePrice": "$95.00",
+    "totalItems": 90,
+    "soldItems": 12,
+    "imageSrc": "https://picsum.photos/seed/sneakers/500/350",
+    "stars": "4.9",
+    "category": "Shoes",
+    "specialCategory": "Official Store"
+  },
+  {
+    "name": "Green Cargo Pants",
+    "price": "$75.90",
+    "salePrice": "$59.90",
+    "totalItems": 70,
+    "soldItems": 31,
+    "imageSrc": "https://picsum.photos/seed/cargopants/500/350",
+    "stars": "4.4",
+    "category": "Pants",
+    "specialCategory": "Best Seller"
+  },
+  {
+    "name": "Classic Baseball Cap",
+    "price": "$25.90",
+    "salePrice": "$19.90",
+    "totalItems": 200,
+    "soldItems": 80,
+    "imageSrc": "https://picsum.photos/seed/baseballcap/500/350",
+    "stars": "4.6",
+    "category": "Cap",
+    "specialCategory": "Keep Stylish"
+  },
+  {
+    "name": "Leather Belt",
+    "price": "$39.00",
+    "salePrice": "$27.00",
+    "totalItems": 110,
+    "soldItems": 43,
+    "imageSrc": "https://picsum.photos/seed/belt/500/350",
+    "stars": "4.2",
+    "category": "Accessories",
+    "specialCategory": "Best Seller"
+  },
+  {
+    "name": "Slim Fit Jeans",
+    "price": "$89.90",
+    "salePrice": "$69.90",
+    "totalItems": 75,
+    "soldItems": 21,
+    "imageSrc": "https://picsum.photos/seed/slimjeans/500/350",
+    "stars": "4.5",
+    "category": "Jeans",
+    "specialCategory": "Keep Stylish"
+  },
+  {
+    "name": "Oversized Flannel Shirt",
+    "price": "$65.00",
+    "salePrice": "$48.00",
+    "totalItems": 60,
+    "soldItems": 19,
+    "imageSrc": "https://picsum.photos/seed/flannel/500/350",
+    "stars": "4.7",
+    "category": "Shirt",
+    "specialCategory": "Best Seller"
+  }
+]
 const DIFFERENT_SHOP: Shop[] = [
   {
     "mark": "Nike Sae Mall",
@@ -276,14 +388,15 @@ const MENU_ABOUT = [
   ]
 ]
 
-function Header({ search, onChangeSearch, category, onChangeCategory, likeCarShop, handleChangeCart }: { search: string; onChangeSearch: React.Dispatch<React.SetStateAction<string>>; category: string; onChangeCategory: React.Dispatch<React.SetStateAction<string>>; likeCarShop: (Vesture & { quantity: number })[]; handleChangeCart: (name: string, quantity: number) => void; }) {
+function Header({ search, onChangeSearch, category, onChangeCategory, likeCarShop, handleChangeCart, onBuy }: { onBuy: (name: string, quantity: number) => void; search: string; onChangeSearch: React.Dispatch<React.SetStateAction<string>>; category: string; onChangeCategory: React.Dispatch<React.SetStateAction<string>>; likeCarShop: (Vesture & { quantity: number })[]; handleChangeCart: (name: string, quantity: number) => void; }) {
+  const [open, setOpen] = useState(false);
 
   function onClickBuy() {
-    toast.success("Congratulations, the items were purchased!")
-    for (let i = 0; i < likeCarShop.length; i++) {
-      handleChangeCart(likeCarShop[i].name, 0)
-    }
+    setOpen(false);
+    toast.success("Congratulations, the items were purchased!");
+    likeCarShop.forEach(({ name }) => onBuy(name, 0));
   }
+
   return (
     <header className="w-full bg-white text-sm font-medium sticky top-0 z-10">
       <div className="text-gray-500 flex border-b border-gray-300 w-full px-2 md:px-4 xl:px-16 py-2 justify-between items-center">
@@ -368,7 +481,7 @@ function Header({ search, onChangeSearch, category, onChangeCategory, likeCarSho
           />
         </div>
         <div className="flex gap-6 row-start-1 lg:col-start-6 col-start-2 justify-self-end">
-          <Sheet>
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger>
               <ShoppingBag className="cursor-pointer" />
             </SheetTrigger>
@@ -380,28 +493,32 @@ function Header({ search, onChangeSearch, category, onChangeCategory, likeCarSho
               </SheetHeader>
               <div className="flex flex-col justify-between h-[90%]">
                 <div>
-                  {likeCarShop.map(({ imageSrc, name, price, quantity }) =>
-                    <article key={name} className="relative flex gap-2 items-center w-full mt-2 bg-white py-4 px-2 rounded-md border border-gray-200">
-                      <div className={`flex items-center justify-center h-10 shadow-none rounded-lg overflow-hidden`}>
-                        <img src={imageSrc} alt="Vesture items" className="h-full w-full" />
+                  {likeCarShop.map(({ imageSrc, name, price, quantity, soldItems, totalItems, salePrice }) =>
+                    <article key={name} className="relative flex gap-2 items-center w-full mt-2 bg-white py-4 px-2 rounded-md border border-gray-200 justify-between">
+                      <div className="flex gap-2 items-center">
+                        <div className={`flex items-center justify-center h-10 shadow-none rounded-lg overflow-hidden`}>
+                          <img src={imageSrc} alt="Vesture items" className="h-full w-full" />
+                        </div>
+                        <div>
+                          <p className="font-bold text-black">{name}</p>
+                          <p className="text-sm text-black">{salePrice ?? price}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-bold text-black">{name}</p>
-                        <p className="text-sm text-black">{price}</p>
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => handleChangeCart(name, quantity - 1)} className="p-1 bg-black rounded-md text-white">
+                          <Minus className="w-4 h-4" />
+                        </button>
+                        <p>{quantity}</p>
+                        <Button className="bg-black hover:bg-black w-fit h-fit p-1 rounded-md text-white" onClick={() => handleChangeCart(name, quantity + 1)} disabled={quantity + soldItems >= totalItems}>
+                          <Plus className="w-4 h-4" />
+                        </Button>
                       </div>
-                      <button onClick={() => handleChangeCart(name, quantity - 1)}>
-                        <Minus />
-                      </button>
-                      <p>{quantity}</p>
-                      <button onClick={() => handleChangeCart(name, quantity + 1)}>
-                        <Plus />
-                      </button>
                     </article>
                   )}
                 </div>
-                <button className="bg-[#F87171] rounded-lg w-full h-10 flex justify-center items-center font-semibold text-lg" onClick={() => onClickBuy()}>
+                <Button className="bg-black hover:bg-gray-800 text-white rounded-lg w-full h-10 flex justify-center items-center font-semibold text-lg" onClick={() => onClickBuy()} disabled={likeCarShop.length === 0}>
                   Buy
-                </button>
+                </Button>
               </div>
             </SheetContent>
           </Sheet>
@@ -488,32 +605,45 @@ function Category({ onSelectCategory }: { onSelectCategory: React.Dispatch<React
   )
 }
 
-function ItemCard({ className, hideSlider, addStar, onApply, ...props }: Vesture & { className?: string; hideSlider?: boolean; addStar?: boolean; onApply?: (likedItem: Vesture) => void }) {
-  const { name, price, salePrice, totalItems, remainingItems, imageSrc, stars } = props;
+function ItemCard({ className, hideSlider, addStar, onApply, isInCart, ...props }: Vesture & { className?: string; hideSlider?: boolean; addStar?: boolean; onApply?: (likedItem: Vesture) => void; isInCart?: (name: string) => boolean; }) {
+  const { name, price, salePrice, totalItems, soldItems, imageSrc, stars } = props;
   const [liked, setLiked] = useState(false);
+
   function handleLike() {
-    setLiked(prevState => !prevState)
-    onApply?.(props)
+    setLiked(prevState => !prevState);
   }
+  function handleAddToCart() {
+    onApply?.(props);
+  }
+
   return (
     <Card className={twMerge("relative overflow-hidden bg-white w-full h-96 border-none", className)}>
-      <div className="absolute right-5 top-4 p-1 bg-white rounded-full flex items-center justify-center" onClick={() => handleLike()}>
+      <div className="absolute right-5 top-4 p-1 bg-white rounded-full flex items-center justify-center cursor-pointer" onClick={() => handleLike()}>
         <Heart className={twMerge("text-gray-300 fill-gray-300 w-6 h-6 transition-all duration-200", liked && 'fill-red-500 text-red-500')} />
       </div>
       <div className="text-black h-full">
         <img src={imageSrc} alt="Vesture items" className="h-3/5 w-full" />
         <div className="h-2/5 p-4 flex flex-col justify-between">
-          <div className="flex flex-col justify-evenly h-2/3">
+          <div className="relative flex flex-col justify-evenly h-2/3">
             <p className="font-bold text-xl">{name}</p>
             <div className={twMerge("hidden items-center gap-1", addStar && 'flex')}>
               <Star className="text-amber-500 fill-amber-500 h-4 w-4" />
               <span className="text-sm font-bold">{stars}</span>
-              <span className="text-sm font-bold text-gray-300">• {totalItems - remainingItems} sold</span>
+              <span className="text-sm font-bold text-gray-300">• {soldItems} sold</span>
             </div>
             <div className="font-bold text-lg">
               <span className="mr-2">{salePrice}</span>
               <span className="text-base text-red-300 line-through">{price}</span>
             </div>
+            <Button
+              className="absolute w-fit right-0 bottom-0 bg-black text-white hover:bg-gray-800"
+              onClick={handleAddToCart}
+              disabled={!isInCart?.(props.name) && soldItems === totalItems}
+            >
+              {
+                isInCart?.(props.name) ? <Check /> : <ShoppingCart />
+              }
+            </Button>
           </div>
           <div className={twMerge('h-1/3 flex flex-col justify-end', hideSlider && 'hidden')}>
             <Separator className="absolute left-0 bg-gray-300 mb-7" />
@@ -522,14 +652,14 @@ function ItemCard({ className, hideSlider, addStar, onApply, ...props }: Vesture
                 className={twMerge(
                   "relative flex w-full touch-none select-none items-center",
                 )}
-                defaultValue={[100 - ((remainingItems * 100) / totalItems)]}
+                value={[((soldItems * 100) / totalItems)]}
                 disabled
               >
                 <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-gray-300">
                   <SliderPrimitive.Range className="absolute h-full bg-black" />
                 </SliderPrimitive.Track>
               </SliderPrimitive.Root>
-              <p className="text-sm whitespace-nowrap text-gray-400 font-medium">{totalItems}/{remainingItems} Sale</p>
+              <p className="text-sm whitespace-nowrap text-gray-400 font-medium">{soldItems}/{totalItems} Sale</p>
             </div>
           </div>
         </div>
@@ -541,7 +671,7 @@ function ItemCard({ className, hideSlider, addStar, onApply, ...props }: Vesture
 
 const FUTURE_DATE = new Date('2026-10-10');
 
-function FlashSale({ onApply, items }: { onApply: (likedItem: Vesture) => void; items: Vesture[] }) {
+function FlashSale({ onApply, items, isInCart }: { onApply: (likedItem: Vesture) => void; items: Vesture[]; isInCart: (name: string) => boolean; }) {
   const [date, setDate] = useState<Date>();
   const distance = date ? FUTURE_DATE.getTime() - date.getTime() : 0;
 
@@ -576,8 +706,8 @@ function FlashSale({ onApply, items }: { onApply: (likedItem: Vesture) => void; 
       <Carousel opts={{ loop: true, align: 'start' }} >
         <CarouselContent>
           {items.map((vesture: Vesture) => (
-            <CarouselItem key={vesture.name} className="md:basis-1/3 lg:basis-1/4 xl:basis-1/5 ml-2">
-              <ItemCard {...vesture} onApply={onApply} />
+            <CarouselItem key={vesture.name} className="md:basis-1/3 lg:basis-1/4 xl:basis-1/5 max-w-80 ml-2">
+              <ItemCard {...vesture} onApply={onApply} isInCart={isInCart} />
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -586,7 +716,7 @@ function FlashSale({ onApply, items }: { onApply: (likedItem: Vesture) => void; 
   )
 }
 
-function ForYou({ selectedCategories, onSelect, onApply, items }: { items: Vesture[]; selectedCategories: string[]; onSelect: React.Dispatch<React.SetStateAction<string[]>>, onApply: (likedItem: Vesture) => void }) {
+function ForYou({ selectedCategories, onSelect, onApply, items, isInCart }: { items: Vesture[]; selectedCategories: string[]; onSelect: React.Dispatch<React.SetStateAction<string[]>>, onApply: (likedItem: Vesture) => void; isInCart: (name: string) => boolean; }) {
   function handleClickCategory(category: string) {
     onSelect((prevState) => {
       if (prevState.includes(category)) return prevState.filter((item) => item !== category);
@@ -617,13 +747,13 @@ function ForYou({ selectedCategories, onSelect, onApply, items }: { items: Vestu
         <CarouselContent>
           {filteredData.map((vesture: Vesture) => (
             <CarouselItem key={vesture.name} className="ml-2 mb-10">
-              <ItemCard {...vesture} hideSlider addStar onApply={onApply} />
+              <ItemCard {...vesture} hideSlider addStar onApply={onApply} isInCart={isInCart} />
             </CarouselItem>
           ))}
         </CarouselContent>
       </Carousel>
       <div className="flex-wrap gap-5 justify-evenly hidden md:flex">
-        {filteredData.map((item) => <ItemCard {...item} key={item.name} className="w-1/3 lg:w-1/5 cursor-pointer" hideSlider addStar onApply={onApply} />)}
+        {filteredData.map((item) => <ItemCard {...item} key={item.name} className="w-1/3 lg:w-1/5  max-w-80 cursor-pointer" hideSlider addStar onApply={onApply} isInCart={isInCart} />)}
       </div>
     </div>
   )
@@ -735,11 +865,17 @@ function Contacts() {
   )
 }
 
-function SearchPage({ search, category }: { search: string; category: string; }) {
-  const filteredData = useMemo(() => SALE_ITEMS.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()) || (category !== 'All Category' && item.category === category)), [search, category])
+function SearchPage({ items, search, category, isInCart, onApply }: { items: Vesture[]; search: string; category: string; isInCart: (name: string) => boolean; onApply: (item: Vesture) => void }) {
+  const filteredData = useMemo(() => items.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()) || (category !== 'All Category' && item.category === category)), [search, category, items])
   return (
-    <div className="flex flex-wrap p-4 gap-4">
-      {filteredData.map((item) => <ItemCard {...item} key={item.name} className="md:w-fit" />)}
+    <div className="flex flex-wrap p-4 gap-4 w-full h-[80%]">
+      {filteredData.map((item) => <ItemCard {...item} key={item.name} className="md:w-fit" isInCart={isInCart} onApply={onApply} />)}
+      {filteredData.length === 0 && (
+        <div className="w-full h-full flex items-center flex-col justify-center text-black gap-4 text-2xl">
+          <Search className="w-16 h-16" />
+          <p>Sorry, we didn&apos;t find any results matching this search</p>
+        </div>
+      )}
     </div>
   )
 }
@@ -749,17 +885,56 @@ export default function App() {
   const [category, setCategory] = useState('All Category');
   const [specialCategories, setSpecialCategories] = useState<string[]>([]);
   const [likeCarShop, setLikeCarShop] = useState<(Vesture & { quantity: number })[]>([]);
+  const [purchasedItems, setPurchasedItems] = useState<(Vesture & { quantity: number })[]>([]);
 
-  const itemsToSell = useMemo(() => SALE_ITEMS.filter((item) =>
+  const salesItems = useMemo(() => SALE_ITEMS.filter((item) =>
     (search !== '' && item.name.toLowerCase().includes(search.toLowerCase())) ||
     item.category === category ||
     category === 'All Category'
-  )
-    , [search, category]);
+  ).map(item => {
+    const foundItem = likeCarShop.find((like) => like.name === item.name);
+    const purchasedItem = purchasedItems.find((like) => like.name === item.name);
+    if (foundItem) {
+      return { ...item, soldItems: item.soldItems + foundItem.quantity + (purchasedItem?.quantity ?? 0) }
+    }
+    return { ...item, soldItems: item.soldItems + (purchasedItem?.quantity ?? 0) };
+  })
+    , [search, category, likeCarShop, purchasedItems]);
+
+  const forYouItems = useMemo(() => FOR_YOU_ITEMS.filter((item) =>
+    (search !== '' && item.name.toLowerCase().includes(search.toLowerCase())) ||
+    item.category === category ||
+    category === 'All Category'
+  ).map(item => {
+    const foundItem = likeCarShop.find((like) => like.name === item.name);
+    const purchasedItem = purchasedItems.find((like) => like.name === item.name);
+    if (foundItem) {
+      return { ...item, soldItems: item.soldItems + foundItem.quantity + (purchasedItem?.quantity ?? 0) }
+    }
+    return { ...item, soldItems: item.soldItems + (purchasedItem?.quantity ?? 0) };
+  })
+    , [search, category, purchasedItems, likeCarShop]);
+
+  const allItems = useMemo(() => [...forYouItems, ...salesItems], [forYouItems, salesItems])
 
   function handleLikeCard(likedItem: Vesture) {
     const formattedItem = { ...likedItem, quantity: 1 }
-    setLikeCarShop((prevState) => [...prevState, formattedItem])
+
+    if (likeCarShop.some((item) => item.name === likedItem.name)) {
+      setLikeCarShop((prevState) => prevState.filter((item) => item.name !== likedItem.name))
+    } else {
+      setLikeCarShop((prevState) => [...prevState, formattedItem])
+    }
+  }
+  function handlePurchaseItems(name: string, quantity: number) {
+    const purchasedItem = likeCarShop.find(item => item.name === name);
+    setPurchasedItems((prevState) => {
+      if (prevState.some(item => item.name === name)) {
+        return prevState.map((item) => item.name === name ? { ...item, quantity: item.quantity + (purchasedItem?.quantity ?? 0) } : item)
+      }
+      return [...prevState, purchasedItem!];
+    });
+    handleChangeCart(name, quantity);
   }
 
   function handleChangeCart(name: string, quantity: number) {
@@ -771,11 +946,17 @@ export default function App() {
       setLikeCarShop((prevState) => prevState.filter((item) => item.name !== name))
     }
   }
+
+  function isInCart(name: string) {
+    return likeCarShop.some((item) => item.name === name);
+  }
+
   return (
     <div className={`${inter.className} bg-[#F4F4F5] w-screen h-screen overflow-auto`}>
       <Toaster richColors />
       <Header
         handleChangeCart={handleChangeCart}
+        onBuy={handlePurchaseItems}
         onChangeSearch={setSearch}
         search={search}
         category={category}
@@ -783,15 +964,21 @@ export default function App() {
         likeCarShop={likeCarShop}
       />
       {
-        search.length !== 0 && <SearchPage search={search} category={category} />
+        search.length !== 0 && <SearchPage items={allItems} search={search} category={category} isInCart={isInCart} onApply={handleLikeCard} />
       }
       {
         search.length === 0 && (
           <>
             <SalesCarousel />
             <Category onSelectCategory={setCategory} />
-            <FlashSale onApply={handleLikeCard} items={itemsToSell} />
-            <ForYou items={itemsToSell} onSelect={setSpecialCategories} selectedCategories={specialCategories} onApply={handleLikeCard} />
+            <FlashSale onApply={handleLikeCard} items={salesItems} isInCart={isInCart} />
+            <ForYou
+              isInCart={isInCart}
+              items={forYouItems}
+              onSelect={setSpecialCategories}
+              selectedCategories={specialCategories}
+              onApply={handleLikeCard}
+            />
             <BestSell />
             <Contacts />
           </>
