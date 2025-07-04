@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Toaster } from "@/components/ui/sonner";
 import * as SliderPrimitive from "@radix-ui/react-slider"
-import { Bell, ChevronDown, Circle, Copyright, Crown, Heart, LayoutGrid, Menu, Search, ShoppingBag, Smartphone, Star, Trash, Zap } from "lucide-react";
+import { Bell, ChevronDown, Circle, Copyright, Crown, Heart, LayoutGrid, Menu, Minus, Plus, Search, ShoppingBag, Smartphone, Star, Zap } from "lucide-react";
 import { Inter } from "next/font/google";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -56,7 +56,7 @@ const SALE_ITEMS: Vesture[] =
       "imageSrc": "https://picsum.photos/seed/denimjacket/500/350",
       "stars": "4.8",
       "category": "Watches",
-      "specialCategory": "Coveted Product"
+      "specialCategory": "Keep Stylish"
     },
     {
       "name": "Black Slim Jeans",
@@ -276,9 +276,16 @@ const MENU_ABOUT = [
   ]
 ]
 
-function Header({ search, onChangeSearch, category, onChangeCategory, likeCarShop, onRemoveFromCart }: { search: string; onChangeSearch: React.Dispatch<React.SetStateAction<string>>; category: string; onChangeCategory: React.Dispatch<React.SetStateAction<string>>; likeCarShop: Vesture[]; onRemoveFromCart: (name: string) => void; }) {
+function Header({ search, onChangeSearch, category, onChangeCategory, likeCarShop, handleChangeCart }: { search: string; onChangeSearch: React.Dispatch<React.SetStateAction<string>>; category: string; onChangeCategory: React.Dispatch<React.SetStateAction<string>>; likeCarShop: (Vesture & { quantity: number })[]; handleChangeCart: (name: string, quantity: number) => void; }) {
+
+  function onClickBuy() {
+    toast.success("Congratulations, the items were purchased!")
+    for (let i = 0; i < likeCarShop.length; i++) {
+      handleChangeCart(likeCarShop[i].name, 0)
+    }
+  }
   return (
-    <header className="w-full bg-white text-sm font-medium">
+    <header className="w-full bg-white text-sm font-medium sticky top-0 z-10">
       <div className="text-gray-500 flex border-b border-gray-300 w-full px-2 md:px-4 xl:px-16 py-2 justify-between items-center">
         <div className="flex gap-2 items-end cursor-pointer">
           <Smartphone />
@@ -373,7 +380,7 @@ function Header({ search, onChangeSearch, category, onChangeCategory, likeCarSho
               </SheetHeader>
               <div className="flex flex-col justify-between h-[90%]">
                 <div>
-                  {likeCarShop.map(({ imageSrc, name, price }) =>
+                  {likeCarShop.map(({ imageSrc, name, price, quantity }) =>
                     <article key={name} className="relative flex gap-2 items-center w-full mt-2 bg-white py-4 px-2 rounded-md border border-gray-200">
                       <div className={`flex items-center justify-center h-10 shadow-none rounded-lg overflow-hidden`}>
                         <img src={imageSrc} alt="Vesture items" className="h-full w-full" />
@@ -382,11 +389,17 @@ function Header({ search, onChangeSearch, category, onChangeCategory, likeCarSho
                         <p className="font-bold text-black">{name}</p>
                         <p className="text-sm text-black">{price}</p>
                       </div>
-                      <Trash className="absolute right-4" onClick={() => onRemoveFromCart(name)} />
+                      <button onClick={() => handleChangeCart(name, quantity - 1)}>
+                        <Minus />
+                      </button>
+                      <p>{quantity}</p>
+                      <button onClick={() => handleChangeCart(name, quantity + 1)}>
+                        <Plus />
+                      </button>
                     </article>
                   )}
                 </div>
-                <button className="bg-[#F87171] rounded-lg w-full h-10 flex justify-center items-center font-semibold text-lg" onClick={() => toast.info("This feature is under development.")}>
+                <button className="bg-[#F87171] rounded-lg w-full h-10 flex justify-center items-center font-semibold text-lg" onClick={() => onClickBuy()}>
                   Buy
                 </button>
               </div>
@@ -402,6 +415,7 @@ function Header({ search, onChangeSearch, category, onChangeCategory, likeCarSho
     </header >
   );
 }
+
 
 function SalesCarousel() {
   const [api, setApi] = useState<CarouselApi>();
@@ -559,7 +573,7 @@ function FlashSale({ onApply, items }: { onApply: (likedItem: Vesture) => void; 
           <p className="flex items-center justify-center rounded-full bg-red-400 w-8 h-8">{(seconds < 10 ? '0' : '') + seconds}</p>
         </div>
       </div>
-      <Carousel opts={{ loop: true }}>
+      <Carousel opts={{ loop: true, align: 'start' }} >
         <CarouselContent>
           {items.map((vesture: Vesture) => (
             <CarouselItem key={vesture.name} className="md:basis-1/3 lg:basis-1/4 xl:basis-1/5 ml-2">
@@ -734,7 +748,7 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All Category');
   const [specialCategories, setSpecialCategories] = useState<string[]>([]);
-  const [likeCarShop, setLikeCarShop] = useState<Vesture[]>([]);
+  const [likeCarShop, setLikeCarShop] = useState<(Vesture & { quantity: number })[]>([]);
 
   const itemsToSell = useMemo(() => SALE_ITEMS.filter((item) =>
     (search !== '' && item.name.toLowerCase().includes(search.toLowerCase())) ||
@@ -744,16 +758,24 @@ export default function App() {
     , [search, category]);
 
   function handleLikeCard(likedItem: Vesture) {
-    setLikeCarShop((prevState) => [...prevState, likedItem])
+    const formattedItem = { ...likedItem, quantity: 1 }
+    setLikeCarShop((prevState) => [...prevState, formattedItem])
   }
-  function handleRemoveFromCart(name: string) {
-    setLikeCarShop((prevState) => prevState.filter((item) => item.name !== name))
+
+  function handleChangeCart(name: string, quantity: number) {
+    if (quantity > 0) {
+      setLikeCarShop((prevState) => prevState.map((vesture) =>
+        vesture.name !== name ? vesture : { ...vesture, quantity }
+      ))
+    } else {
+      setLikeCarShop((prevState) => prevState.filter((item) => item.name !== name))
+    }
   }
   return (
     <div className={`${inter.className} bg-[#F4F4F5] w-screen h-screen overflow-auto`}>
       <Toaster richColors />
       <Header
-        onRemoveFromCart={handleRemoveFromCart}
+        handleChangeCart={handleChangeCart}
         onChangeSearch={setSearch}
         search={search}
         category={category}
