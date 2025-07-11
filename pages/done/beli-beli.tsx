@@ -617,13 +617,13 @@ function ItemCard({ className, hideSlider, addStar, onApply, isInCart, ...props 
   }
 
   return (
-    <Card className={twMerge("relative overflow-hidden bg-white w-full h-96 border-none", className)}>
+    <Card className={twMerge("relative overflow-hidden bg-white w-full border-none", className)}>
       <div className="absolute right-5 top-4 p-1 bg-white rounded-full flex items-center justify-center cursor-pointer" onClick={() => handleLike()}>
         <Heart className={twMerge("text-gray-300 fill-gray-300 w-6 h-6 transition-all duration-200", liked && 'fill-red-500 text-red-500')} />
       </div>
       <div className="text-black h-full">
-        <img src={imageSrc} alt="Vesture items" className="h-3/5 w-full" />
-        <div className="h-2/5 p-4 flex flex-col justify-between">
+        <img src={imageSrc} alt="Vesture items" className="h-1/2 w-full" />
+        <div className="h-1/2 p-4 flex flex-col justify-between">
           <div className="relative flex flex-col justify-evenly h-2/3">
             <p className="font-bold text-xl">{name}</p>
             <div className={twMerge("hidden items-center gap-1", addStar && 'flex')}>
@@ -631,22 +631,21 @@ function ItemCard({ className, hideSlider, addStar, onApply, isInCart, ...props 
               <span className="text-sm font-bold">{stars}</span>
               <span className="text-sm font-bold text-gray-300">• {soldItems} sold</span>
             </div>
-            <div className="flex justify-between items-center flex-wrap">
+            <div className="flex flex-col items-start">
               <div className="font-bold text-lg">
                 <span className="mr-2">{salePrice}</span>
                 <span className="text-base text-red-300 line-through">{price}</span>
               </div>
               <Button
-                className="relative bg-black text-white hover:bg-gray-800"
+                className="relative bg-black text-white hover:bg-gray-800 my-2 w-full"
                 onClick={handleAddToCart}
                 disabled={!isInCart?.(props.name) && soldItems === totalItems}
               >
-                <>
-                  {isInCart?.(props.name) && <div className="text-xs absolute bottom-1 right-2">{props.quantity}</div>}
-                  {
-                    isInCart?.(props.name) ? <Check /> : <ShoppingCart />
-                  }
-                </>
+                <div className="flex gap-2 items-center relative w-full h-full justify-center">
+                  {isInCart?.(props.name) ? `${props.quantity + (props.quantity && props.quantity > 1 ? ' items' : ' item')} added to cart` : 'Add to cart'}
+                  {isInCart?.(props.name) ? <Check /> : <ShoppingCart />}
+                </div>
+
               </Button>
             </div>
           </div>
@@ -711,7 +710,7 @@ function FlashSale({ onApply, items, isInCart }: { onApply: (likedItem: Vesture)
       <Carousel opts={{ loop: true, align: 'start' }} >
         <CarouselContent>
           {items.map((vesture) => (
-            <CarouselItem key={vesture.name} className="md:basis-1/3 lg:basis-1/4 xl:basis-1/5 max-w-84 md:max-w-80">
+            <CarouselItem key={vesture.name} className="md:basis-1/3 lg:basis-1/4 xl:basis-1/5 max-w-60 md:max-w-80">
               <ItemCard {...vesture} onApply={onApply} isInCart={isInCart} />
             </CarouselItem>
           ))}
@@ -751,7 +750,7 @@ function ForYou({ selectedCategories, onSelect, onApply, items, isInCart }: { it
       <Carousel opts={{ loop: true, align: 'start' }} className="md:hidden">
         <CarouselContent>
           {filteredData.map((vesture) => (
-            <CarouselItem key={vesture.name} className="ml-2 mb-10 max-w-80">
+            <CarouselItem key={vesture.name} className="ml-2 mb-10 max-w-60 md:max-w-80">
               <ItemCard {...vesture} hideSlider addStar onApply={onApply} isInCart={isInCart} />
             </CarouselItem>
           ))}
@@ -803,7 +802,7 @@ function BestSell() {
                 <div className="text-black font-bold flex text-xs h-1/2 gap-2 items-end">
                   {products.map(({ img, price }) => (
                     <div className="flex flex-col items-center gap-1" key={img + price}>
-                      <img src={img} alt="" className="rounded-lg" />
+                      <img src={img} alt="" className="rounded-lg max-h-14 md:max-h-none" />
                       <p>${price.toLocaleString('en-US', { currency: 'USD' })}</p>
                     </div>
                   ))}
@@ -880,7 +879,7 @@ function SearchPage({ items, search, category, isInCart, onApply }: { items: Ves
           <Search className="w-16 h-16" />
           <p>Sorry, we didn&apos;t find any results matching this search</p>
         </div>
-      ) : filteredData.map((item) => <ItemCard {...item} key={item.name} className="md:w-1/4 min-w-60 max-w-80" isInCart={isInCart} onApply={onApply} />)}
+      ) : filteredData.map((item) => <ItemCard {...item} key={item.name} className="md:w-1/4 max-w-60 md:max-w-80" isInCart={isInCart} onApply={onApply} />)}
     </div>
   )
 }
