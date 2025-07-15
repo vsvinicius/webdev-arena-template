@@ -48,6 +48,28 @@ const SALE_ITEMS: Vesture[] =
       "specialCategory": "Special Discount"
     },
     {
+      "name": "Sneakers Pro",
+      "price": "$120.00",
+      "salePrice": "$95.00",
+      "totalItems": 90,
+      "soldItems": 12,
+      "imageSrc": "https://picsum.photos/seed/sneakers/500/350",
+      "stars": "4.9",
+      "category": "Shoes",
+      "specialCategory": "Official Store"
+    },
+    {
+      "name": "Sneakers Plus",
+      "price": "$150.00",
+      "salePrice": "$95.00",
+      "totalItems": 90,
+      "soldItems": 12,
+      "imageSrc": "https://picsum.photos/seed/shoes/500/350",
+      "stars": "4.9",
+      "category": "Shoes",
+      "specialCategory": "Official Store"
+    },
+    {
       "name": "Denim Jacket",
       "price": "$89.90",
       "salePrice": "$69.90",
@@ -128,6 +150,160 @@ const SALE_ITEMS: Vesture[] =
 const FOR_YOU_ITEMS: Vesture[] = [
   {
     "name": "Yellow Pants",
+    "price": "$39.90",
+    "salePrice": "$29.90",
+    "totalItems": 120,
+    "soldItems": 42,
+    "imageSrc": "https://picsum.photos/seed/tshirt/500/350",
+    "stars": "4.5",
+    "category": "Cap",
+    "specialCategory": "Coveted Product"
+  },
+  {
+    "name": "Channel Bag",
+    "price": "$239.90",
+    "salePrice": "$129.90",
+    "totalItems": 120,
+    "soldItems": 42,
+    "imageSrc": "https://picsum.photos/seed/tshirt/500/350",
+    "stars": "4.5",
+    "category": "Bag",
+    "specialCategory": "Coveted Product"
+  },
+  {
+    "name": "Leather Bag",
+    "price": "$159.90",
+    "salePrice": "$89.90",
+    "totalItems": 120,
+    "soldItems": 42,
+    "imageSrc": "https://picsum.photos/seed/bag/500/350",
+    "stars": "4.5",
+    "category": "Bag",
+    "specialCategory": "Coveted Product"
+  },
+  {
+    "name": "Simple Watch",
+    "price": "$59.90",
+    "salePrice": "$44.90",
+    "totalItems": 80,
+    "soldItems": 18,
+    "imageSrc": "https://picsum.photos/seed/watch/500/350",
+    "stars": "4.8",
+    "category": "Watches",
+    "specialCategory": "Best Seller"
+  },
+  {
+    "name": "Robust Watch",
+    "price": "$159.90",
+    "salePrice": "$114.90",
+    "totalItems": 80,
+    "soldItems": 18,
+    "imageSrc": "https://picsum.photos/seed/watch/500/350",
+    "stars": "4.8",
+    "category": "Watches",
+    "specialCategory": "Best Seller"
+  },
+  {
+    "name": "Red Hoodie",
+    "price": "$59.90",
+    "salePrice": "$44.90",
+    "totalItems": 80,
+    "soldItems": 18,
+    "imageSrc": "https://picsum.photos/seed/hoodie/500/350",
+    "stars": "4.8",
+    "category": "Hoodie",
+    "specialCategory": "Best Seller"
+  },
+  {
+    "name": "Simple Jacket",
+    "price": "$99.90",
+    "salePrice": "$79.90",
+    "totalItems": 65,
+    "soldItems": 23,
+    "imageSrc": "https://picsum.photos/seed/denim/500/350",
+    "stars": "4.7",
+    "category": "Jacket",
+    "specialCategory": "Special Discount"
+  },
+  {
+    "name": "Marvel Tee",
+    "price": "$45.00",
+    "salePrice": "$35.00",
+    "totalItems": 100,
+    "soldItems": 56,
+    "imageSrc": "https://picsum.photos/seed/graphictee/500/350",
+    "stars": "4.3",
+    "category": "T-Shirt",
+    "specialCategory": "Official Store"
+  },
+  {
+    "name": "Gray Sneakers",
+    "price": "$120.00",
+    "salePrice": "$95.00",
+    "totalItems": 90,
+    "soldItems": 12,
+    "imageSrc": "https://picsum.photos/seed/sneakers/500/350",
+    "stars": "4.9",
+    "category": "Shoes",
+    "specialCategory": "Official Store"
+  },
+  {
+    "name": "Social Pants",
+    "price": "$75.90",
+    "salePrice": "$59.90",
+    "totalItems": 70,
+    "soldItems": 31,
+    "imageSrc": "https://picsum.photos/seed/cargopants/500/350",
+    "stars": "4.4",
+    "category": "Pants",
+    "specialCategory": "Best Seller"
+  },
+  {
+    "name": "Cap",
+    "price": "$25.90",
+    "salePrice": "$19.90",
+    "totalItems": 200,
+    "soldItems": 80,
+    "imageSrc": "https://picsum.photos/seed/baseballcap/500/350",
+    "stars": "4.6",
+    "category": "Cap",
+    "specialCategory": "Keep Stylish"
+  },
+  {
+    "name": "Casual Belt",
+    "price": "$39.00",
+    "salePrice": "$27.00",
+    "totalItems": 110,
+    "soldItems": 43,
+    "imageSrc": "https://picsum.photos/seed/belt/500/350",
+    "stars": "4.2",
+    "category": "Accessories",
+    "specialCategory": "Best Seller"
+  },
+  {
+    "name": "Fit Jeans",
+    "price": "$89.90",
+    "salePrice": "$69.90",
+    "totalItems": 75,
+    "soldItems": 21,
+    "imageSrc": "https://picsum.photos/seed/slimjeans/500/350",
+    "stars": "4.5",
+    "category": "Jeans",
+    "specialCategory": "Keep Stylish"
+  },
+  {
+    "name": "Adidas Shirt",
+    "price": "$65.00",
+    "salePrice": "$48.00",
+    "totalItems": 60,
+    "soldItems": 19,
+    "imageSrc": "https://picsum.photos/seed/flannel/500/350",
+    "stars": "4.7",
+    "category": "Shirt",
+    "specialCategory": "Best Seller"
+  },
+  {
+    "name": "Orange Pants",
     "price": "$39.90",
     "salePrice": "$29.90",
     "totalItems": 120,
@@ -493,6 +669,14 @@ function Header({ search, onChangeSearch, category, onChangeCategory, likeCarSho
               </SheetHeader>
               <div className="flex flex-col justify-between h-[90%]">
                 <div>
+                  {
+                    likeCarShop.length === 0 && (
+                      <div className="mt-4">
+                        <p className="text-xl font-semibold">Your cart is empty</p>
+                        <p className="mt-2">Add products to get the best discounts!</p>
+                      </div>
+                    )
+                  }
                   {likeCarShop.map(({ imageSrc, name, price, quantity, soldItems, totalItems, salePrice }) =>
                     <article key={name} className="relative flex gap-2 items-center w-full mt-2 bg-white py-4 px-2 rounded-md border border-gray-200 justify-between">
                       <div className="flex gap-2 items-center">
@@ -570,7 +754,7 @@ function SalesCarousel() {
                 <p className="text-white md:text-black text-4xl md:text-5xl font-bold tracking-wide">Up to <i>50%</i> OFF!</p>
                 <p className="text-base md:text-xl font-medium">Redefine Your Everyday Style</p>
               </div>
-              <img src="https://picsum.photos/800/600" alt="" className="w-[60%] h-96 hidden md:block" />
+              <img src="https://picsum.photos/1000/600" alt="" className="w-[60%] h-96 hidden md:block" />
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -586,17 +770,17 @@ function SalesCarousel() {
 
 function Category({ onSelectCategory }: { onSelectCategory: React.Dispatch<React.SetStateAction<string>> }) {
   return (
-    <div className="bg-white text-black font-bold text-sm flex items-center py-6 md:py-10 justify-evenly overflow-auto gap-8 px-8">
+    <div className="bg-white text-black font-bold text-sm flex items-center py-6 md:py-10 justify-evenly overflow-auto gap-8 px-8 xl:justify-center xl:gap-28 xl:text-lg">
       {CATEGORIES.map(({ name, imageSrc }) => (
         <div key={name} className="text-center cursor-pointer" onClick={() => onSelectCategory(name)}>
-          <Avatar className="w-14 h-14 mb-1">
+          <Avatar className="w-14 h-14 mb-1 xl:w-20 xl:h-20">
             <AvatarImage src={imageSrc} />
           </Avatar>
           <p>{name}</p>
         </div>
       ))}
       <div className="flex flex-col items-center cursor-pointer" onClick={() => onSelectCategory('All Category')}>
-        <div className="rounded-full p-2 border border-gray-300 w-14 h-14 flex items-center justify-center mb-1">
+        <div className="rounded-full p-2 border border-gray-300 w-14 h-14 flex items-center justify-center mb-1 xl:w-20 xl:h-20">
           <LayoutGrid className="fill-gray-300 text-gray-300" />
         </div>
         <p className="whitespace-nowrap">All Category</p>
@@ -624,14 +808,14 @@ function ItemCard({ className, hideSlider, addStar, onApply, isInCart, ...props 
       <div className="text-black h-full">
         <img src={imageSrc} alt="Vesture items" className="h-1/2 w-full" />
         <div className="h-1/2 p-4 flex flex-col justify-between">
-          <div className="relative flex flex-col justify-evenly h-2/3">
+          <div className="relative flex flex-col justify-evenly h-2/3 xl:h-3/4">
             <p className="font-bold text-xl">{name}</p>
             <div className={twMerge("hidden items-center gap-1", addStar && 'flex')}>
               <Star className="text-amber-500 fill-amber-500 h-4 w-4" />
               <span className="text-sm font-bold">{stars}</span>
               <span className="text-sm font-bold text-gray-300">• {soldItems} sold</span>
             </div>
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start justify-between">
               <div className="font-bold text-lg">
                 <span className="mr-2">{salePrice}</span>
                 <span className="text-base text-red-300 line-through">{price}</span>
@@ -649,7 +833,7 @@ function ItemCard({ className, hideSlider, addStar, onApply, isInCart, ...props 
               </Button>
             </div>
           </div>
-          <div className={twMerge('h-1/3 flex flex-col justify-end', hideSlider && 'hidden')}>
+          <div className={twMerge('h-1/3 flex flex-col justify-end  xl:h-1/4', hideSlider && 'hidden')}>
             <Separator className="absolute left-0 bg-gray-300 mb-7" />
             <div className="mt-4 flex gap-2">
               <SliderPrimitive.Root
@@ -737,7 +921,7 @@ function ForYou({ selectedCategories, onSelect, onApply, items, isInCart }: { it
           {
             SPECIAL_CATEGORIES.map((category) => (
               <Button
-                className={twMerge("hover:bg-black hover:text-white w-[40%] bg-white text-black", selectedCategories.includes(category) && 'bg-black text-white')}
+                className={twMerge("hover:bg-black focus:bg-white focus:text-black hover:text-white w-[40%] bg-white text-black", selectedCategories.includes(category) && 'bg-black text-white focus:bg-black focus:text-white')}
                 key={category}
                 onClick={() => handleClickCategory(category)}
               >
@@ -756,7 +940,7 @@ function ForYou({ selectedCategories, onSelect, onApply, items, isInCart }: { it
           ))}
         </CarouselContent>
       </Carousel>
-      <div className="flex-wrap gap-5 justify-evenly hidden md:flex">
+      <div className={twMerge('flex-wrap gap-5 hidden justify-center md:flex')}>
         {filteredData.map((item) => <ItemCard {...item} key={item.name} className="w-1/3 lg:w-1/5  max-w-80 cursor-pointer" hideSlider addStar onApply={onApply} isInCart={isInCart} />)}
       </div>
     </div>
@@ -879,7 +1063,7 @@ function SearchPage({ items, search, category, isInCart, onApply }: { items: Ves
           <Search className="w-16 h-16" />
           <p>Sorry, we didn&apos;t find any results matching this search</p>
         </div>
-      ) : filteredData.map((item) => <ItemCard {...item} key={item.name} className="md:w-1/4 max-w-60 md:max-w-80" isInCart={isInCart} onApply={onApply} />)}
+      ) : filteredData.map((item) => <ItemCard {...item} key={item.name} className="md:w-1/4 max-w-60 md:max-w-80 max-h-[28rem]" isInCart={isInCart} onApply={onApply} />)}
     </div>
   )
 }
