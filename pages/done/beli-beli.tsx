@@ -685,7 +685,7 @@ function Header({ search, onChangeSearch, category, onChangeCategory, likeCarSho
                         </div>
                         <div>
                           <p className="font-bold text-black">{name}</p>
-                          <p className="text-sm text-black">{salePrice ?? price}</p>
+                          <p className="text-sm text-black">{`$${(+((salePrice ?? price).split('$')[1]) * quantity).toFixed(2)}`}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -770,17 +770,17 @@ function SalesCarousel() {
 
 function Category({ onSelectCategory }: { onSelectCategory: React.Dispatch<React.SetStateAction<string>> }) {
   return (
-    <div className="bg-white text-black font-bold text-sm flex items-center py-6 md:py-10 justify-evenly overflow-auto gap-8 px-8 xl:justify-center xl:gap-28 xl:text-lg">
+    <div className="bg-white text-black font-bold text-sm flex items-center py-6 md:py-10 justify-evenly overflow-auto gap-8 px-8 2xl:justify-center 2xl:gap-28 2xl:text-lg">
       {CATEGORIES.map(({ name, imageSrc }) => (
         <div key={name} className="text-center cursor-pointer" onClick={() => onSelectCategory(name)}>
-          <Avatar className="w-14 h-14 mb-1 xl:w-20 xl:h-20">
+          <Avatar className="w-14 h-14 mb-1 2xl:w-20 2xl:h-20">
             <AvatarImage src={imageSrc} />
           </Avatar>
           <p>{name}</p>
         </div>
       ))}
       <div className="flex flex-col items-center cursor-pointer" onClick={() => onSelectCategory('All Category')}>
-        <div className="rounded-full p-2 border border-gray-300 w-14 h-14 flex items-center justify-center mb-1 xl:w-20 xl:h-20">
+        <div className="rounded-full p-2 border border-gray-300 w-14 h-14 flex items-center justify-center mb-1 2xl:w-20 2xl:h-20">
           <LayoutGrid className="fill-gray-300 text-gray-300" />
         </div>
         <p className="whitespace-nowrap">All Category</p>
@@ -789,7 +789,7 @@ function Category({ onSelectCategory }: { onSelectCategory: React.Dispatch<React
   )
 }
 
-function ItemCard({ className, hideSlider, addStar, onApply, isInCart, ...props }: Vesture & { quantity?: number; className?: string; hideSlider?: boolean; addStar?: boolean; onApply?: (likedItem: Vesture) => void; isInCart?: (name: string) => boolean; }) {
+function ItemCard({ className, hideSlider, addStar, onApply, isInCart, itemsInCart, ...props }: Vesture & { itemsInCart: number; quantity?: number; className?: string; hideSlider?: boolean; addStar?: boolean; onApply?: (likedItem: Vesture) => void; isInCart?: (name: string) => boolean; }) {
   const { name, price, salePrice, totalItems, soldItems, imageSrc, stars } = props;
   const [liked, setLiked] = useState(false);
 
@@ -827,7 +827,15 @@ function ItemCard({ className, hideSlider, addStar, onApply, isInCart, ...props 
               >
                 <div className="flex gap-2 items-center relative w-full h-full justify-center">
                   {isInCart?.(props.name) ? `${props.quantity + (props.quantity && props.quantity > 1 ? ' items' : ' item')} added to cart` : 'Add to cart'}
-                  {isInCart?.(props.name) ? <Check /> : <ShoppingCart />}
+                  {
+                    isInCart?.(props.name) ? <Check /> :
+                      <div className="relative">
+                        <ShoppingCart />
+                        {itemsInCart > 0 && <span className="text-[8px] absolute -right-3 top-2 flex items-center justify-center rounded-full h-3 w-3 font-black bg-white text-black">
+                          {itemsInCart}
+                        </span>}
+                      </div>
+                  }
                 </div>
 
               </Button>
@@ -859,7 +867,7 @@ function ItemCard({ className, hideSlider, addStar, onApply, isInCart, ...props 
 
 const FUTURE_DATE = new Date('2026-10-10');
 
-function FlashSale({ onApply, items, isInCart }: { onApply: (likedItem: Vesture) => void; items: (Vesture & { quantity?: number })[]; isInCart: (name: string) => boolean; }) {
+function FlashSale({ onApply, items, isInCart, itemsInCart }: { itemsInCart: number; onApply: (likedItem: Vesture) => void; items: (Vesture & { quantity?: number })[]; isInCart: (name: string) => boolean; }) {
   const [date, setDate] = useState<Date>();
   const distance = date ? FUTURE_DATE.getTime() - date.getTime() : 0;
 
@@ -895,7 +903,7 @@ function FlashSale({ onApply, items, isInCart }: { onApply: (likedItem: Vesture)
         <CarouselContent>
           {items.map((vesture) => (
             <CarouselItem key={vesture.name} className="md:basis-1/3 lg:basis-1/4 xl:basis-1/5 max-w-60 md:max-w-80">
-              <ItemCard {...vesture} onApply={onApply} isInCart={isInCart} />
+              <ItemCard {...vesture} onApply={onApply} isInCart={isInCart} itemsInCart={itemsInCart} />
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -904,7 +912,7 @@ function FlashSale({ onApply, items, isInCart }: { onApply: (likedItem: Vesture)
   )
 }
 
-function ForYou({ selectedCategories, onSelect, onApply, items, isInCart }: { items: (Vesture & { quantity?: number })[]; selectedCategories: string[]; onSelect: React.Dispatch<React.SetStateAction<string[]>>, onApply: (likedItem: Vesture) => void; isInCart: (name: string) => boolean; }) {
+function ForYou({ selectedCategories, onSelect, onApply, items, isInCart, itemsInCart }: { itemsInCart: number; items: (Vesture & { quantity?: number })[]; selectedCategories: string[]; onSelect: React.Dispatch<React.SetStateAction<string[]>>, onApply: (likedItem: Vesture) => void; isInCart: (name: string) => boolean; }) {
   function handleClickCategory(category: string) {
     onSelect((prevState) => {
       if (prevState.includes(category)) return prevState.filter((item) => item !== category);
@@ -935,13 +943,13 @@ function ForYou({ selectedCategories, onSelect, onApply, items, isInCart }: { it
         <CarouselContent>
           {filteredData.map((vesture) => (
             <CarouselItem key={vesture.name} className="ml-2 mb-10 max-w-60 md:max-w-80">
-              <ItemCard {...vesture} hideSlider addStar onApply={onApply} isInCart={isInCart} />
+              <ItemCard {...vesture} hideSlider addStar onApply={onApply} isInCart={isInCart} itemsInCart={itemsInCart} />
             </CarouselItem>
           ))}
         </CarouselContent>
       </Carousel>
       <div className={twMerge('flex-wrap gap-5 hidden justify-center md:flex')}>
-        {filteredData.map((item) => <ItemCard {...item} key={item.name} className="w-1/3 lg:w-1/5  max-w-80 cursor-pointer" hideSlider addStar onApply={onApply} isInCart={isInCart} />)}
+        {filteredData.map((item) => <ItemCard {...item} key={item.name} className="w-1/3 lg:w-1/5  max-w-80 cursor-pointer" hideSlider addStar onApply={onApply} isInCart={isInCart} itemsInCart={itemsInCart} />)}
       </div>
     </div>
   )
@@ -1053,7 +1061,7 @@ function Contacts() {
   )
 }
 
-function SearchPage({ items, search, category, isInCart, onApply }: { items: Vesture[]; search: string; category: string; isInCart: (name: string) => boolean; onApply: (item: Vesture) => void }) {
+function SearchPage({ items, search, category, isInCart, onApply, itemsInCart }: { itemsInCart: number; items: Vesture[]; search: string; category: string; isInCart: (name: string) => boolean; onApply: (item: Vesture) => void }) {
   const filteredData = useMemo(() => items.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()) && (category === 'All Category' || item.category === category)), [search, category, items])
 
   return (
@@ -1063,7 +1071,7 @@ function SearchPage({ items, search, category, isInCart, onApply }: { items: Ves
           <Search className="w-16 h-16" />
           <p>Sorry, we didn&apos;t find any results matching this search</p>
         </div>
-      ) : filteredData.map((item) => <ItemCard {...item} key={item.name} className="md:w-1/4 max-w-60 md:max-w-80 max-h-[28rem]" isInCart={isInCart} onApply={onApply} />)}
+      ) : filteredData.map((item) => <ItemCard {...item} key={item.name} className="md:w-1/4 max-w-60 md:max-w-80 max-h-[28rem]" isInCart={isInCart} onApply={onApply} itemsInCart={itemsInCart} />)}
     </div>
   )
 }
@@ -1137,6 +1145,8 @@ export default function App() {
     return likeCarShop.some((item) => item.name === name);
   }
 
+  const itemsInCart = useMemo(() => likeCarShop.reduce((prev, acc) => prev + acc.quantity, 0), [likeCarShop])
+
   return (
     <div className={`${inter.className} bg-[#F4F4F5] w-screen h-screen overflow-auto`}>
       <Toaster richColors />
@@ -1150,20 +1160,21 @@ export default function App() {
         likeCarShop={likeCarShop}
       />
       {
-        search.length !== 0 && <SearchPage items={allItems} search={search} category={category} isInCart={isInCart} onApply={handleLikeCard} />
+        search.length !== 0 && <SearchPage items={allItems} search={search} category={category} isInCart={isInCart} onApply={handleLikeCard} itemsInCart={itemsInCart} />
       }
       {
         search.length === 0 && (
           <>
             <SalesCarousel />
             <Category onSelectCategory={setCategory} />
-            <FlashSale onApply={handleLikeCard} items={salesItems} isInCart={isInCart} />
+            <FlashSale onApply={handleLikeCard} items={salesItems} isInCart={isInCart} itemsInCart={itemsInCart} />
             <ForYou
               isInCart={isInCart}
               items={forYouItems}
               onSelect={setSpecialCategories}
               selectedCategories={specialCategories}
               onApply={handleLikeCard}
+              itemsInCart={itemsInCart}
             />
             <BestSell />
             <Contacts />
